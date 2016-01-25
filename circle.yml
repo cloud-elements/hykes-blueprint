@@ -1,0 +1,7 @@
+dependencies:
+  pre:
+    - sudo make apt
+
+test:
+  override:
+    - make test

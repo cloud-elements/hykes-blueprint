@@ -1,0 +1,249 @@
+#!/usr/bin/env bash
+
+bindir=
+etcdir=
+config="${etcdir}/hykes-blueprinter"
+cmd="${1}" ; shift
+
+## Global utility functions #######################################################################
+function pprint() {
+  local blue='\033[1;34m'
+  local bold='\033[1m'
+  local green='\033[0;32m'
+  local red='\033[0;31m'
+  local normal='\033[0m'
+  local white='\033[0;37m'
+
+  while (( "$#" )); do
+    case "${1}" in
+      -n) local n='-n' ; shift ;;
+      *)
+        test -n "${1}" && test -n "${adj}" && local msg=${1}
+        test -n "${1}" && test -z "${adj}" && local adj=${1}
+        shift
+      ;;
+    esac
+  done
+
+  case "${adj}" in
+    bad) echo -e ${n} "${red}${msg}${normal}" ;;
+    good) echo -e ${n} "${green}${msg}${normal}" ;;
+    head) echo -e ${n} "${blue}==>${normal} ${white}${bold}${msg}${normal}" ;;
+    *) echo ${n} "${msg}" ;;
+  esac
+}
+
+function read-config() {
+  echo $(test -f "${1}" && sed -n '1p' < "${1}")
+}
+
+function read-inventory() {
+  test -f "${1}" && tr ' ' '\n' < "${1}" | egrep --color=never '^.+\[[0-9\:]+\]\.'
+}
+
+function write-config() {
+  echo "${2}" > "${1}"
+}
+
+## Argument and option parsing ####################################################################
+while (( "$#" )); do
+  case "${1}" in
+    --password=*) password=${1/--password=/''} ; shift ;;
+    --path=*) path=${1/--path=/''} ; shift ;;
+    --role=*) role=${1/--role=/''} ; shift ;;
+    --url=*) url=${1/--url=/''} ; shift ;;
+    -p*) password=${2} ; shift ; shift ;;
+    -P*) path=${2} ; shift ; shift ;;
+    -r*) role=${2} ; shift ; shift ;;
+    -U*) url=${2} ; shift ; shift ;;
+    *)
+      case "${cmd}" in
+        decrypt|encrypt) test -n "${1}" && test -z "${password}" && password=${1} ;;
+      esac
+      case "${cmd}" in
+        init)
+          test -n "${1}" && test -n "${path}" && url=${1}
+          test -n "${1}" && test -z "${path}" && path=${1}
+        ;;
+      esac
+      case "${cmd}" in
+        list-servers) test -n "${1}" && test -z "${role}" && role=${1} ;;
+      esac
+      shift
+    ;;
+  esac
+done
+
+## Argument and option prompting ##################################################################
+case "${cmd}" in
+  init) test -z "${path}" && read -e -p 'Enter path: ' path ;;
+esac
+case "${cmd}" in
+  decrypt|encrypt) test -z "${password}" && read -e -p 'Enter password: ' -s password; echo ;;
+esac
+
+## Argument and option defaults ###################################################################
+test -z "${path}" && path=$(read-config "${config}")
+
+## Command utility functions ######################################################################
+function clean-blueprint() {
+  rm -rf "${1}" && mkdir -p "${1}"
+}
+export -f clean-blueprint
+
+function count-inventory-role() {
+  local upper=$(slice-inventory-role "${1}" | tail -c 3 | head -c 1)
+  echo "$(( upper + 1 ))"
+}
+export -f count-inventory-role
+
+function download-blueprint() {
+  case "${1}" in
+    # Private download (e.g. https://token@api.github.com/repos/cloud-elements/example.com/tarball/master)
+    *@*)
+      local token=$(echo "${1/https:\/\//}" | cut -f1 -d'@')
+      curl --fail --silent --location --retry 4 --retry-delay 8 \
+        --header "Authorization: token ${token}" \
+        --header 'Accept: application/vnd.github.v3.raw' \
+        --output "${2}" \
+        "${1/$token\@/}"
+    ;;
+    # Public download (e.g. https://github.com/cloud-elements/example.com/archive/master.tar.gz)
+    *) curl --fail --silent --location --retry 4 --retry-delay 8 --output "${2}" "${1}" ;;
+  esac
+}
+export -f download-blueprint
+
+function decompress-blueprint() {
+  tar -x -f "${1}" -C "${2}" --strip 1
+}
+export -f decompress-blueprint
+
+function slice-inventory-role() {
+  echo "$(echo "${1}" | egrep --color=never -o '\[[0-9\:]+\]')"
+}
+export -f slice-inventory-role
+
+function state-crypto() {
+  head -n 1 "${path}/hykes.yml" 2>/dev/null | grep -q '$ANSIBLE_VAULT'
+}
+export -f state-crypto
+
+function unfurl-inventory-role() {
+  local count=$(count-inventory-role ${1})
+  local slice=$(slice-inventory-role ${1})
+
+  for ((i=0; i<=count-1; i++)); do
+    echo ${1/"$slice"/"$i"}
+  done
+}
+export -f unfurl-inventory-role
+
+## Command functions ##############################################################################
+function decrypt() {
+  local enc=$(encrypted)
+
+  pprint head 'Decrypting'
+  if [ "${enc}" = 'true' ]; then
+    echo "${password}" > "${etcdir}/password"
+    find "${path}" -type f -not -name '*.tar.gz' -not -name '*.md' -not -name '.DS_Store' | \
+      xargs -I{} ansible-vault decrypt '{}' --vault-password-file="${etcdir}/password" > /dev/null 2>&1
+    rm -f "${etcdir}/password"
+  fi
+}
+
+function decrypted() {
+  state-crypto > /dev/null 2>&1
+  case "$?" in
+    0) echo 'false' ; return 1 ;;
+    *) echo 'true' ;;
+  esac
+}
+
+function encrypt() {
+  local dcr=$(decrypted)
+
+  pprint head 'Encrypting'
+  if [ "${dcr}" = 'true' ]; then
+    echo "${password}" > "${etcdir}/password"
+    find "${path}" -type f -not -name '*.tar.gz' -not -name '*.md' -not -name '.DS_Store' | \
+      xargs -I{} ansible-vault encrypt '{}' --vault-password-file="${etcdir}/password" > /dev/null 2>&1
+    rm -f "${etcdir}/password"
+  fi
+}
+
+function encrypted() {
+  state-crypto > /dev/null 2>&1
+  case "$?" in
+    0) echo 'true' ;;
+    *) echo 'false' ; return 1 ;;
+  esac
+}
+
+function help() {
+  local a=(${0//\// })
+  local bin=${a[${#a[@]}-1]}
+
+  echo 'Usage:'
+  echo "  ${bin} decrypt <password>"
+  echo "  ${bin} decrypted"
+  echo "  ${bin} encrypt <password>"
+  echo "  ${bin} encrypted"
+  echo "  ${bin} init <path> [url]"
+  echo "  ${bin} list-servers [role]"
+  echo
+  echo 'Install Commands:'
+  echo '  init    Initialize to work against the given blueprint'
+  echo
+  echo 'Cryptography Commands:'
+  echo '  decrypt      Decrypt blueprint'
+  echo '  decrypted    Output boolean indicating if decrypted'
+  echo '  encrypt      Encrypt blueprint'
+  echo '  encrypted    Output boolean indicating if encrypted'
+  echo
+  echo 'Discovery Commands:'
+  echo '  list-servers     Output unfurled servers from blueprint inventory'
+  echo
+  echo 'More Information:'
+  echo '  chat    https://ce-success.herokuapp.com'
+  echo '  docs    https://ce-onprem.readthedocs.org'
+  echo '  repo    https://github.com/cloud-elements/hykes-blueprinter'
+}
+
+function init() {
+  test -n "${url}" && \
+    pprint head 'Cleaning' &&
+    { clean-blueprint "${path}" || \
+      { pprint bad 'failed' ; exit 1; }; } && \
+    pprint head 'Downloading' && \
+    { download-blueprint "${url}" "${path}/blueprint.tar.gz" || \
+      { pprint bad 'failed' ; exit 1; }; } && \
+    pprint head 'Decompressing' && \
+    { decompress-blueprint "${path}/blueprint.tar.gz" "${path}" || \
+      { pprint bad 'failed' ; exit 1; }; }
+
+  pprint head 'Configuring'
+  write-config "${config}" "${path}"
+}
+
+function list-servers() {
+  local inv="$(read-inventory "${path}/hykes.ini")"
+  local unfurl="$(echo "${inv}" | xargs -I{} bash -c '! unfurl-inventory-role {}')"
+
+  case "${role}" in
+    '') echo "${unfurl}" ;;
+    *) echo "$(echo "${unfurl}" | grep "${role}")" ;;
+  esac
+}
+
+function version() {
+  echo 'v0.0.0'
+}
+
+## Command routing ################################################################################
+case "${cmd}" in
+  --help|-h) help ; exit 0 ;;
+  --version|-v) version ; exit 0 ;;
+  decrypt|decrypted|encrypt|encrypted|init|list-servers) "${cmd}" ; exit $? ;;
+  *) help ; exit 1 ;;
+esac
