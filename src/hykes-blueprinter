@@ -157,6 +157,7 @@ function decrypt() {
 }
 
 function decrypted() {
+  pprint head 'Decrypted'
   state-crypto
   case "$?" in
     0) echo 'false' ; return 1 ;;
@@ -174,6 +175,7 @@ function encrypt() {
 }
 
 function encrypted() {
+  pprint head 'Encrypted'
   state-crypto
   case "$?" in
     0) echo 'true' ;;
