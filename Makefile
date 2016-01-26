@@ -4,14 +4,18 @@ uname := $(shell uname -s)
 
 apt:
 ifeq (${uname}, Linux)
-	@add-apt-repository ppa:duggan/bats --yes
+	@apt-add-repository ppa:ansible/ansible -y
+	@add-apt-repository ppa:duggan/bats -y
 	@apt-get update
+	@apt-get install software-properties-common
+	@apt-get install ansible
 	@apt-get install bats
 	@apt-get install git
 endif
 
 brew:
 ifeq (${uname}, Darwin)
+	@brew install ansible
 	@brew install bats
 	@brew install coreutils
 	@brew install git
