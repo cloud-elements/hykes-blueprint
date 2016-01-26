@@ -48,21 +48,21 @@ function write-config() {
 ## Argument and option parsing ####################################################################
 while (( "$#" )); do
   case "${1}" in
-    --git-url=*) giturl=${1/--git-url=/''} ; shift ;;
     --password=*) password=${1/--password=/''} ; shift ;;
     --path=*) path=${1/--path=/''} ; shift ;;
     --role=*) role=${1/--role=/''} ; shift ;;
-    -G*) giturl=${2} ; shift ; shift ;;
+    --url=*) url=${1/--url=/''} ; shift ;;
     -p*) password=${2} ; shift ; shift ;;
     -P*) path=${2} ; shift ; shift ;;
     -r*) role=${2} ; shift ; shift ;;
+    -U*) url=${2} ; shift ; shift ;;
     *)
       case "${cmd}" in
         decrypt|encrypt) test -n "${1}" && test -z "${password}" && password=${1} ;;
       esac
       case "${cmd}" in
         init)
-          test -n "${1}" && test -n "${path}" && giturl=${1}
+          test -n "${1}" && test -n "${path}" && url=${1}
           test -n "${1}" && test -z "${path}" && path=${1}
         ;;
       esac
@@ -172,7 +172,7 @@ function help() {
   echo "  ${bin} decrypted"
   echo "  ${bin} encrypt <password>"
   echo "  ${bin} encrypted"
-  echo "  ${bin} init <path> [git-url]"
+  echo "  ${bin} init <path> [url]"
   echo "  ${bin} list-servers [role]"
   echo
   echo 'Configuration Commands:'
@@ -194,12 +194,12 @@ function help() {
 }
 
 function init() {
-  test -n "${giturl}" && \
+  test -n "${url}" && \
     pprint head 'Cleaning' &&
     { clean-blueprint "${path}" || \
       { pprint bad 'failed' ; exit 1; }; } && \
     pprint head 'Cloning' && \
-    { clone-blueprint "${giturl}" "${path}" || \
+    { clone-blueprint "${url}" "${path}" || \
       { pprint bad 'failed' ; exit 1; }; }
 
   pprint head 'Configuring'

@@ -44,7 +44,7 @@ Usage:
   hykes-blueprinter decrypted
   hykes-blueprinter encrypt <password>
   hykes-blueprinter encrypted
-  hykes-blueprinter init <path> [git-url]
+  hykes-blueprinter init <path> [url]
   hykes-blueprinter list-servers [role]
 
 Configuration Commands:
