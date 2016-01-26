@@ -1,6 +1,12 @@
 #!/usr/bin/env bats
 
-load suite
+function setup() {
+  if [ -z "${HYKES_BLUEPRINTER_URL_PRIVATE}" ] || \
+    [ -z "${HYKES_BLUEPRINTER_PASSWORD}" ]; then
+
+    skip 'Environment variables should exist'
+  fi
+}
 
 @test 'init should download and configure a private blueprint repo' {
   build/bin/hykes-blueprinter init build/tmp "${HYKES_BLUEPRINTER_URL_PRIVATE}"
