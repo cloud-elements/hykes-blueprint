@@ -3,7 +3,7 @@
 load suite
 
 @test 'init should download and configure a private blueprint repo' {
-  build/bin/hykes-blueprinter init build/tmp "${HYKES_BLUEPRINTER_GIT_URL_PRIVATE}"
+  build/bin/hykes-blueprinter init build/tmp "${HYKES_BLUEPRINTER_URL_PRIVATE}"
 }
 
 @test 'decrypt should decrypt an encrypted blueprint' {
