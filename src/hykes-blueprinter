@@ -129,7 +129,7 @@ export -f unfurl-inventory-role
 function decrypt() {
   pprint head 'Decrypting'
 
-  encrypted && \
+  encrypted > /dev/null 2>&1 && \
   echo "${password}" > "${etcdir}/password" && \
   ansible-vault decrypt "${path}/hykes.ini" --vault-password-file="${etcdir}/password" > /dev/null 2>&1 && \
   ansible-vault decrypt "${path}/hykes.yml" --vault-password-file="${etcdir}/password" > /dev/null 2>&1 && \
@@ -153,7 +153,7 @@ function decrypted() {
 function encrypt() {
   pprint head 'Encrypting'
 
-  decrypted && \
+  decrypted > /dev/null 2>&1 && \
   echo "${password}" > "${etcdir}/password" && \
   ansible-vault encrypt "${path}/hykes.ini" --vault-password-file="${etcdir}/password" > /dev/null 2>&1 && \
   ansible-vault encrypt "${path}/hykes.yml" --vault-password-file="${etcdir}/password" > /dev/null 2>&1 && \
