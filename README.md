@@ -26,7 +26,8 @@ $ hykes-blueprinter init
 $ git clone git@github.com:cloud-elements/hykes-blueprinter.git
 $ cd hykes-blueprinter
 $ git checkout tags/v0.0.0
-$ make dependencies && make install
+$ make dependencies
+$ make install
 $ build/bin/hykes-blueprinter init
 ```
 
