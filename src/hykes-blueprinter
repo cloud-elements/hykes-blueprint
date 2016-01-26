@@ -45,7 +45,7 @@ function read-inventory() {
 }
 
 function write-config() {
-  echo "${2}" > "${1}"
+  echo "${1}" > "${2}"
 }
 
 ## Argument and option parsing ####################################################################
@@ -214,7 +214,7 @@ function init() {
       { pprint bad 'failed' ; return 1; }; }
 
   pprint head 'Configuring'
-  write-config "${config}" "${path}"
+  write-config "${path}" "${config}"
 }
 
 function list-servers() {
