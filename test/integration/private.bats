@@ -1,6 +1,10 @@
 #!/usr/bin/env bats
 
-load suite
+function setup() {
+  if [ -z "${HYKES_BLUEPRINTER_URL_PRIVATE}" ] || [ -z "${HYKES_BLUEPRINTER_PASSWORD}" ]; then
+    skip 'Environment variables should exist'
+  fi
+}
 
 @test 'init should download and configure a private blueprint repo' {
   build/bin/hykes-blueprinter init build/tmp "${HYKES_BLUEPRINTER_URL_PRIVATE}"
@@ -13,13 +17,13 @@ load suite
 @test 'decrypted should exit 0 and output true with a decrypted blueprint' {
   run build/bin/hykes-blueprinter decrypted
   [ ${status} -eq 0 ]
-  [ "${output}" = 'true' ]
+  [ "${lines[1]}" = 'true' ]
 }
 
 @test 'encrypted should exit 1 and output false with a decrypted blueprint' {
   run build/bin/hykes-blueprinter encrypted
   [ ${status} -eq 1 ]
-  [ "${output}" = 'false' ]
+  [ "${lines[1]}" = 'false' ]
 }
 
 @test 'list-servers should output server list' {
@@ -35,11 +39,11 @@ load suite
 @test 'decrypted should exit 1 and output false with an encrypted blueprint' {
   run build/bin/hykes-blueprinter decrypted
   [ ${status} -eq 1 ]
-  [ "${output}" = 'false' ]
+  [ "${lines[1]}" = 'false' ]
 }
 
 @test 'encrypted should exit 0 and output true with an encrypted blueprint' {
   run build/bin/hykes-blueprinter encrypted
   [ ${status} -eq 0 ]
-  [ "${output}" = 'true' ]
+  [ "${lines[1]}" = 'true' ]
 }

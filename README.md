@@ -8,7 +8,7 @@
 [![circleci](https://circleci.com/gh/cloud-elements/hykes-blueprinter.svg?style=shield&circle-token=6190bf233e8b1bb1e36f654ce4d765ef249d020f)](https://circleci.com/gh/cloud-elements/hykes-blueprinter)
 
 ## Grokking
-![diagram](http://share.rockymadden.com/230w1p2S011Q/Image%202016-01-25%20at%205.20.45%20PM.png)
+![diagram](http://share.rockymadden.com/1I1A142Y1F3V/Image%202016-01-26%20at%201.06.49%20PM.png)
 
 ## Installation
 
@@ -26,7 +26,8 @@ $ hykes-blueprinter init
 $ git clone git@github.com:cloud-elements/hykes-blueprinter.git
 $ cd hykes-blueprinter
 $ git checkout tags/v0.0.0
-$ make dependencies && make install
+$ make dependencies
+$ make install
 $ build/bin/hykes-blueprinter init
 ```
 

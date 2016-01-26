@@ -2,13 +2,13 @@
 
 bindir=
 etcdir=
-config="${etcdir}/hykes-blueprinter"
 cmd="${1}" ; shift
 
-## Traps ##########################################################################################
-trap "test -f ${etcdir}/password && rm -f ${etcdir}/password" 0
-
 ## Global utility functions #######################################################################
+function delete-tmp-password() {
+  test -f "${etcdir}/password" && rm -f "${etcdir}/password"
+}
+
 function pprint() {
   local blue='\033[1;34m'
   local bold='\033[1m'
@@ -36,16 +36,16 @@ function pprint() {
   esac
 }
 
-function read-config() {
-  echo $(test -f "${1}" && sed -n '1p' < "${1}")
+function read-config-path() {
+  echo $(test -f "${etcdir}/hykes-blueprinter" && sed -n '1p' < "${etcdir}/hykes-blueprinter")
 }
 
-function read-inventory() {
-  test -f "${1}" && tr ' ' '\n' < "${1}" | egrep --color=never '^.+\[[0-9\:]+\]\.'
+function write-config-path() {
+  echo "${1}" > "${etcdir}/hykes-blueprinter"
 }
 
-function write-config() {
-  echo "${2}" > "${1}"
+function write-tmp-password() {
+  echo "${1}" > "${etcdir}/password"
 }
 
 ## Argument and option parsing ####################################################################
@@ -86,16 +86,16 @@ case "${cmd}" in
 esac
 
 ## Argument and option defaults ###################################################################
-test -z "${path}" && path=$(read-config "${config}")
+test -z "${path}" && path=$(read-config-path)
 
 ## Command utility functions ######################################################################
 function clean-blueprint() {
-  rm -rf "${1}"
+  rm -rf "${path}"
 }
 export -f clean-blueprint
 
 function clone-blueprint() {
-  git clone "${1}" "${2}"
+  git clone "${1}" "${path}"
 }
 export -f clone-blueprint
 
@@ -104,6 +104,27 @@ function count-inventory-role() {
   echo "$(( upper + 1 ))"
 }
 export -f count-inventory-role
+
+function decrypt-blueprint() {
+  ansible-vault decrypt "${path}/hykes.ini" --vault-password-file="${etcdir}/password" > /dev/null 2>&1 && \
+  ansible-vault decrypt "${path}/hykes.yml" --vault-password-file="${etcdir}/password" > /dev/null 2>&1 && \
+  find "${path}"/**/* -type f -not -path "${path}/.git/*" -not -name '.DS_Store' | \
+    xargs -P 4 -I{} ansible-vault decrypt '{}' --vault-password-file="${etcdir}/password" > /dev/null 2>&1
+}
+export -f decrypt-blueprint
+
+function encrypt-blueprint() {
+  ansible-vault encrypt "${path}/hykes.ini" --vault-password-file="${etcdir}/password" > /dev/null 2>&1 && \
+  ansible-vault encrypt "${path}/hykes.yml" --vault-password-file="${etcdir}/password" > /dev/null 2>&1 && \
+  find "${path}"/**/* -type f -not -path "${path}/.git/*" -not -name '.DS_Store' | \
+    xargs -P 4 -I{} ansible-vault encrypt '{}' --vault-password-file="${etcdir}/password" > /dev/null 2>&1
+}
+export -f encrypt-blueprint
+
+function read-inventory() {
+  test -f "${path}/hykes.ini" && tr ' ' '\n' < "${path}/hykes.ini" | egrep --color=never '^.+\[[0-9\:]+\]\.'
+}
+export -f read-inventory
 
 function slice-inventory-role() {
   echo "$(echo "${1}" | egrep --color=never -o '\[[0-9\:]+\]')"
@@ -127,27 +148,17 @@ export -f unfurl-inventory-role
 
 ## Command functions ##############################################################################
 function decrypt() {
-  local enc=$(encrypted)
-
   pprint head 'Decrypting'
-  if [ "${enc}" = 'true' ]; then
-    echo "${password}" > "${etcdir}/password"
-    ansible-vault decrypt "${path}/hykes.ini" \
-      --vault-password-file="${etcdir}/password" > /dev/null 2>&1 && \
-    ansible-vault decrypt "${path}/hykes.yml" \
-      --vault-password-file="${etcdir}/password" > /dev/null 2>&1 && \
-    find "${path}"/**/* -type f -not -path "${path}/.git/*" -not -name '.DS_Store' | \
-      xargs -P 4 -I{} ansible-vault decrypt '{}' \
-        --vault-password-file="${etcdir}/password" > /dev/null 2>&1
-    case "$?" in
-      0) return 0 ;;
-      *) pprint bad 'failed' ; return 1 ;;
-    esac
-  fi
+  state-crypto && write-tmp-password "${password}" && decrypt-blueprint
+  case "$?" in
+    0) return 0 ;;
+    *) pprint bad 'failed' ; return 1 ;;
+  esac
 }
 
 function decrypted() {
-  state-crypto > /dev/null 2>&1
+  pprint head 'Decrypted'
+  state-crypto
   case "$?" in
     0) echo 'false' ; return 1 ;;
     *) echo 'true' ;;
@@ -155,27 +166,17 @@ function decrypted() {
 }
 
 function encrypt() {
-  local dcr=$(decrypted)
-
   pprint head 'Encrypting'
-  if [ "${dcr}" = 'true' ]; then
-    echo "${password}" > "${etcdir}/password"
-    ansible-vault encrypt "${path}/hykes.ini" \
-      --vault-password-file="${etcdir}/password" > /dev/null 2>&1 && \
-    ansible-vault encrypt "${path}/hykes.yml" \
-      --vault-password-file="${etcdir}/password" > /dev/null 2>&1 && \
-    find "${path}"/**/* -type f -not -path "${path}/.git/*" -not -name '.DS_Store' | \
-      xargs -P 4 -I{} ansible-vault encrypt '{}' \
-        --vault-password-file="${etcdir}/password" > /dev/null 2>&1
-    case "$?" in
-      0) return 0 ;;
-      *) pprint bad 'failed' ; return 1 ;;
-    esac
-  fi
+  ! state-crypto && write-tmp-password "${password}" && encrypt-blueprint
+  case "$?" in
+    0) return 0 ;;
+    *) pprint bad 'failed' ; return 1 ;;
+  esac
 }
 
 function encrypted() {
-  state-crypto > /dev/null 2>&1
+  pprint head 'Encrypted'
+  state-crypto
   case "$?" in
     0) echo 'true' ;;
     *) echo 'false' ; return 1 ;;
@@ -215,18 +216,18 @@ function help() {
 function init() {
   test -n "${url}" && \
     pprint head 'Cleaning' &&
-    { clean-blueprint "${path}" || \
+    { clean-blueprint || \
       { pprint bad 'failed' ; return 1; }; } && \
     pprint head 'Cloning' && \
-    { clone-blueprint "${url}" "${path}" || \
+    { clone-blueprint "${url}" || \
       { pprint bad 'failed' ; return 1; }; }
 
   pprint head 'Configuring'
-  write-config "${config}" "${path}"
+  write-config-path "${path}"
 }
 
 function list-servers() {
-  local inv="$(read-inventory "${path}/hykes.ini")"
+  local inv="$(read-inventory)"
   local unfurl="$(echo "${inv}" | xargs -I{} bash -c '! unfurl-inventory-role {}')"
 
   case "${role}" in
@@ -238,6 +239,9 @@ function list-servers() {
 function version() {
   echo 'v0.0.0'
 }
+
+## Traps ##########################################################################################
+trap "delete-tmp-password" 0
 
 ## Command routing ################################################################################
 case "${cmd}" in
