@@ -48,21 +48,21 @@ function write-config() {
 ## Argument and option parsing ####################################################################
 while (( "$#" )); do
   case "${1}" in
+    --git-url=*) giturl=${1/--git-url=/''} ; shift ;;
     --password=*) password=${1/--password=/''} ; shift ;;
     --path=*) path=${1/--path=/''} ; shift ;;
     --role=*) role=${1/--role=/''} ; shift ;;
-    --url=*) url=${1/--url=/''} ; shift ;;
+    -G*) giturl=${2} ; shift ; shift ;;
     -p*) password=${2} ; shift ; shift ;;
     -P*) path=${2} ; shift ; shift ;;
     -r*) role=${2} ; shift ; shift ;;
-    -U*) url=${2} ; shift ; shift ;;
     *)
       case "${cmd}" in
         decrypt|encrypt) test -n "${1}" && test -z "${password}" && password=${1} ;;
       esac
       case "${cmd}" in
         init)
-          test -n "${1}" && test -n "${path}" && url=${1}
+          test -n "${1}" && test -n "${path}" && giturl=${1}
           test -n "${1}" && test -z "${path}" && path=${1}
         ;;
       esac
@@ -87,37 +87,20 @@ test -z "${path}" && path=$(read-config "${config}")
 
 ## Command utility functions ######################################################################
 function clean-blueprint() {
-  rm -rf "${1}" && mkdir -p "${1}"
+  rm -rf "${1}"
 }
 export -f clean-blueprint
+
+function clone-blueprint() {
+  git clone "${1}" "${2}"
+}
+export -f clone-blueprint
 
 function count-inventory-role() {
   local upper=$(slice-inventory-role "${1}" | tail -c 3 | head -c 1)
   echo "$(( upper + 1 ))"
 }
 export -f count-inventory-role
-
-function download-blueprint() {
-  case "${1}" in
-    # Private download (e.g. https://token@api.github.com/repos/cloud-elements/example.com/tarball/master)
-    *@*)
-      local token=$(echo "${1/https:\/\//}" | cut -f1 -d'@')
-      curl --fail --silent --location --retry 4 --retry-delay 8 \
-        --header "Authorization: token ${token}" \
-        --header 'Accept: application/vnd.github.v3.raw' \
-        --output "${2}" \
-        "${1/$token\@/}"
-    ;;
-    # Public download (e.g. https://github.com/cloud-elements/example.com/archive/master.tar.gz)
-    *) curl --fail --silent --location --retry 4 --retry-delay 8 --output "${2}" "${1}" ;;
-  esac
-}
-export -f download-blueprint
-
-function decompress-blueprint() {
-  tar -x -f "${1}" -C "${2}" --strip 1
-}
-export -f decompress-blueprint
 
 function slice-inventory-role() {
   echo "$(echo "${1}" | egrep --color=never -o '\[[0-9\:]+\]')"
@@ -146,7 +129,7 @@ function decrypt() {
   pprint head 'Decrypting'
   if [ "${enc}" = 'true' ]; then
     echo "${password}" > "${etcdir}/password"
-    find "${path}" -type f -not -name '*.tar.gz' -not -name '*.md' -not -name '.DS_Store' | \
+    find "${path}" -type f -not -path "${path}/.git/*" -not -name '*.md' -not -name '.DS_Store' | \
       xargs -I{} ansible-vault decrypt '{}' --vault-password-file="${etcdir}/password" > /dev/null 2>&1
     rm -f "${etcdir}/password"
   fi
@@ -166,7 +149,7 @@ function encrypt() {
   pprint head 'Encrypting'
   if [ "${dcr}" = 'true' ]; then
     echo "${password}" > "${etcdir}/password"
-    find "${path}" -type f -not -name '*.tar.gz' -not -name '*.md' -not -name '.DS_Store' | \
+    find "${path}" -type f -not -path "${path}/.git/*" -not -name '*.md' -not -name '.DS_Store' | \
       xargs -I{} ansible-vault encrypt '{}' --vault-password-file="${etcdir}/password" > /dev/null 2>&1
     rm -f "${etcdir}/password"
   fi
@@ -189,10 +172,10 @@ function help() {
   echo "  ${bin} decrypted"
   echo "  ${bin} encrypt <password>"
   echo "  ${bin} encrypted"
-  echo "  ${bin} init <path> [url]"
+  echo "  ${bin} init <path> [git-url]"
   echo "  ${bin} list-servers [role]"
   echo
-  echo 'Install Commands:'
+  echo 'Configuration Commands:'
   echo '  init    Initialize to work against the given blueprint'
   echo
   echo 'Cryptography Commands:'
@@ -211,15 +194,12 @@ function help() {
 }
 
 function init() {
-  test -n "${url}" && \
+  test -n "${giturl}" && \
     pprint head 'Cleaning' &&
     { clean-blueprint "${path}" || \
       { pprint bad 'failed' ; exit 1; }; } && \
-    pprint head 'Downloading' && \
-    { download-blueprint "${url}" "${path}/blueprint.tar.gz" || \
-      { pprint bad 'failed' ; exit 1; }; } && \
-    pprint head 'Decompressing' && \
-    { decompress-blueprint "${path}/blueprint.tar.gz" "${path}" || \
+    pprint head 'Cloning' && \
+    { clone-blueprint "${giturl}" "${path}" || \
       { pprint bad 'failed' ; exit 1; }; }
 
   pprint head 'Configuring'

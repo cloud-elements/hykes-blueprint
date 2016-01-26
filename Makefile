@@ -7,12 +7,14 @@ ifeq (${uname}, Linux)
 	@add-apt-repository ppa:duggan/bats --yes
 	@apt-get update
 	@apt-get install bats
+	@apt-get install git
 endif
 
 brew:
 ifeq (${uname}, Darwin)
 	@brew install bats
 	@brew install coreutils
+	@brew install git
 endif
 
 clean: | uninstall
@@ -24,8 +26,8 @@ install: | stub
 ifeq (${uname}, Darwin)
 	@$(eval _bindir := $(shell greadlink -f ${bindir}))
 	@$(eval _etcdir := $(shell greadlink -f ${etcdir}))
-	@sed -i ''  "s|bindir=|bindir=${_bindir}|g" ${bindir}/hykes-blueprinter
-	@sed -i ''  "s|etcdir=|etcdir=${_etcdir}|g" ${bindir}/hykes-blueprinter
+	@sed -i '' "s|bindir=|bindir=${_bindir}|g" ${bindir}/hykes-blueprinter
+	@sed -i '' "s|etcdir=|etcdir=${_etcdir}|g" ${bindir}/hykes-blueprinter
 else ifeq (${uname}, Linux)
 	@$(eval _bindir := $(shell readlink -f ${bindir}))
 	@$(eval _etcdir := $(shell readlink -f ${etcdir}))
@@ -40,15 +42,11 @@ stub:
 
 test: | test-unit test-integration
 
-test-unit: | install
-	@bats \
-		test/unit/help.bats \
-		test/unit/version.bats
-
 test-integration: | install
-	@bats \
-		test/integration/private.bats \
-		test/integration/public.bats
+	@bats test/integration
+
+test-unit: | install
+	@bats test/unit
 
 uninstall:
 	@rm -rf ${bindir}

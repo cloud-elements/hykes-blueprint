@@ -1,4 +1,4 @@
-# hykes-blueprinter <sub><sup>| Hykes blueprint helper</sup></sub>
+# hykes-blueprinter <sub><sup>| Cloud Elements cloud blueprint utility</sup></sub>
 [![version](http://img.shields.io/badge/version-v0.0.0-blue.svg)](CHANGELOG.md)
 [![versioning](http://img.shields.io/badge/versioning-semver-blue.svg)](http://semver.org/)
 [![branching](http://img.shields.io/badge/branching-github%20flow-blue.svg)](https://guides.github.com/introduction/flow/)
@@ -7,6 +7,9 @@
 [![docs](http://img.shields.io/badge/docs-read-blue.svg)](https://ce-onprem.readthedocs.org)
 [![circleci](https://circleci.com/gh/cloud-elements/hykes-blueprinter.svg?style=shield&circle-token=6190bf233e8b1bb1e36f654ce4d765ef249d020f)](https://circleci.com/gh/cloud-elements/hykes-blueprinter)
 
+## Grokking
+![diagram](http://share.rockymadden.com/230w1p2S011Q/Image%202016-01-25%20at%205.20.45%20PM.png)
+
 ## Installation
 
 ### Via `brew`:
@@ -14,6 +17,7 @@
 ```bash
 $ brew tap cloud-elements/hykes git@github.com:cloud-elements/homebrew-hykes.git
 $ brew install hykes-blueprinter
+$ hykes-blueprinter init
 ```
 
 ### Via `git clone`:
@@ -23,6 +27,7 @@ $ git clone git@github.com:cloud-elements/hykes-blueprinter.git
 $ cd hykes-blueprinter
 $ git checkout tags/v0.0.0
 $ make dependencies && make install
+$ build/bin/hykes-blueprinter init
 ```
 
 > __PROTIPS:__
@@ -42,7 +47,7 @@ Usage:
   hykes-blueprinter init <path> [url]
   hykes-blueprinter list-servers [role]
 
-Install Commands:
+Configuration Commands:
   init    Initialize to work against the given blueprint
 
 Cryptography Commands:
