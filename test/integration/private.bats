@@ -1,9 +1,7 @@
 #!/usr/bin/env bats
 
 function setup() {
-  if [ -z "${HYKES_BLUEPRINTER_URL_PRIVATE}" ] || \
-    [ -z "${HYKES_BLUEPRINTER_PASSWORD}" ]; then
-
+  if [ -z "${HYKES_BLUEPRINTER_URL_PRIVATE}" ] || [ -z "${HYKES_BLUEPRINTER_PASSWORD}" ]; then
     skip 'Environment variables should exist'
   fi
 }
