@@ -235,7 +235,7 @@ function init() {
       { pprint bad 'failed' ; return 1; }; }
 
   pprint subhead 'Configuring' ${quiet}
-  write-config-path "${path}"
+  write-config-path $(greadlink -f "${path}")
 }
 
 function list-servers() {
