@@ -41,12 +41,12 @@ reference it relatively (e.g. `build/bin/hykes-blueprinter`).
 ```bash
 $ hykes-blueprinter --help
 Usage:
-  hykes-blueprinter decrypt <password>
-  hykes-blueprinter decrypted
-  hykes-blueprinter encrypt <password>
-  hykes-blueprinter encrypted
-  hykes-blueprinter init <path> [url]
-  hykes-blueprinter list-servers [role]
+  hykes-blueprinter decrypt <password> [--quiet|-q]
+  hykes-blueprinter decrypted [--quiet|-q]
+  hykes-blueprinter encrypt <password> [--quiet|-q]
+  hykes-blueprinter encrypted [--quiet|-q]
+  hykes-blueprinter init <path> [url] [--quiet|-q]
+  hykes-blueprinter list-servers [role] [--quiet|-q]
 
 Configuration Commands:
   init    Initialize to work against the given blueprint
