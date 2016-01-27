@@ -11,11 +11,10 @@ function delete-tmp-password() {
 
 function pprint() {
   local blue='\033[1;34m'
-  local bold='\033[1m'
-  local green='\033[0;32m'
-  local red='\033[0;31m'
+  local green='\033[1;32m'
+  local red='\033[1;31m'
   local normal='\033[0m'
-  local white='\033[0;37m'
+  local white='\033[1;37m'
 
   while (( "$#" )); do
     case "${1}" in
@@ -33,8 +32,8 @@ function pprint() {
     case "${adj}" in
       bad) echo -e ${n} "${red}${msg}${normal}" ;;
       good) echo -e ${n} "${green}${msg}${normal}" ;;
-      head) echo -e ${n} "${blue}==>${normal} ${white}${bold}${msg}${normal}" ;;
-      subhead) echo -e ${n} "${green}==>${normal} ${white}${bold}${msg}${normal}" ;;
+      head) echo -e ${n} "${blue}==>${normal} ${white}${msg}${normal}" ;;
+      subhead) echo -e ${n} "${green}==>${normal} ${white}${msg}${normal}" ;;
       *) echo ${n} "${msg}" ;;
     esac
   fi
@@ -112,18 +111,24 @@ function count-inventory-role() {
 export -f count-inventory-role
 
 function decrypt-blueprint() {
+  if [ "$(find "${path}" -type d | grep -v '.git' | wc -l | tr ' ' '\0')" -gt 1 ]; then
+    find "${path}"/**/* -type f | grep -v '.git' | grep -v '.DS_Store' | \
+      xargs -P 4 -I{} ansible-vault decrypt '{}' --vault-password-file="${etcdir}/password" > /dev/null 2>&1
+  fi
+
   ansible-vault decrypt "${path}/hykes.ini" --vault-password-file="${etcdir}/password" > /dev/null 2>&1 && \
-  ansible-vault decrypt "${path}/hykes.yml" --vault-password-file="${etcdir}/password" > /dev/null 2>&1 && \
-  find "${path}"/**/* -type f -not -path "${path}/.git/*" -not -name '.DS_Store' | \
-    xargs -P 4 -I{} ansible-vault decrypt '{}' --vault-password-file="${etcdir}/password" > /dev/null 2>&1
+  ansible-vault decrypt "${path}/hykes.yml" --vault-password-file="${etcdir}/password" > /dev/null 2>&1
 }
 export -f decrypt-blueprint
 
 function encrypt-blueprint() {
+  if [ "$(find "${path}" -type d | grep -v '.git' | wc -l | tr ' ' '\0')" -gt 1 ]; then
+    find "${path}"/**/* -type f | grep -v '.git' | grep -v '.DS_Store' | \
+      xargs -P 4 -I{} ansible-vault encrypt '{}' --vault-password-file="${etcdir}/password" > /dev/null 2>&1
+  fi
+
   ansible-vault encrypt "${path}/hykes.ini" --vault-password-file="${etcdir}/password" > /dev/null 2>&1 && \
-  ansible-vault encrypt "${path}/hykes.yml" --vault-password-file="${etcdir}/password" > /dev/null 2>&1 && \
-  find "${path}"/**/* -type f -not -path "${path}/.git/*" -not -name '.DS_Store' | \
-    xargs -P 4 -I{} ansible-vault encrypt '{}' --vault-password-file="${etcdir}/password" > /dev/null 2>&1
+  ansible-vault encrypt "${path}/hykes.yml" --vault-password-file="${etcdir}/password" > /dev/null 2>&1
 }
 export -f encrypt-blueprint
 
@@ -167,7 +172,7 @@ function decrypted() {
   state-crypto
   case "$?" in
     0) pprint okay 'false' ; return 1 ;;
-    *) pprint okay 'true' ; return 0 ;;
+    *) pprint okay 'true' ;;
   esac
 }
 
@@ -184,7 +189,7 @@ function encrypted() {
   pprint head 'Encrypted' ${quiet}
   state-crypto
   case "$?" in
-    0) pprint okay 'true' ; return 0 ;;
+    0) pprint okay 'true' ;;
     *) pprint okay 'false' ; return 1 ;;
   esac
 }
@@ -235,11 +240,17 @@ function init() {
 
 function list-servers() {
   pprint head 'Listing' ${quiet}
-  local inv="$(read-inventory)"
-  local unfurl="$(echo "${inv}" | xargs -I{} bash -c '! unfurl-inventory-role {}')"
-  case "${role}" in
-    '') echo "${unfurl}" ;;
-    *) echo "$(echo "${unfurl}" | grep "${role}")" ;;
+  state-crypto
+  case "$?" in
+    0) pprint bad 'failed (encrypted)' ; return 1 ;;
+    1)
+      local inv="$(read-inventory)"
+      local unfurl="$(echo "${inv}" | xargs -I{} bash -c '! unfurl-inventory-role {}')"
+      case "${role}" in
+        '') echo "${unfurl}" ;;
+        *) echo "$(echo "${unfurl}" | grep "${role}")" ;;
+      esac
+    ;;
   esac
 }
 

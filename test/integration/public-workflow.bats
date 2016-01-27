@@ -26,6 +26,11 @@ function setup() {
   [ "${lines[1]}" = 'true' ]
 }
 
+@test 'list-servers should exit 1 with an encrypted blueprint' {
+  run build/bin/hykes-blueprinter list-servers
+  [ ${status} -eq 1 ]
+}
+
 @test 'decrypt should decrypt an encrypted blueprint' {
   build/bin/hykes-blueprinter decrypt --password=password
 }
@@ -42,7 +47,7 @@ function setup() {
   [ "${lines[1]}" = 'false' ]
 }
 
-@test 'list-servers should output server list' {
+@test 'list-servers should exit 0 and output server list with a decrypted blueprint' {
   run build/bin/hykes-blueprinter list-servers
   [ ${status} -eq 0 ]
   [ "${#lines[@]}" -gt 1 ]
