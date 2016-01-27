@@ -11,11 +11,10 @@ function delete-tmp-password() {
 
 function pprint() {
   local blue='\033[1;34m'
-  local bold='\033[1m'
-  local green='\033[0;32m'
-  local red='\033[0;31m'
+  local green='\033[1;32m'
+  local red='\033[1;31m'
   local normal='\033[0m'
-  local white='\033[0;37m'
+  local white='\033[1;37m'
 
   while (( "$#" )); do
     case "${1}" in
@@ -33,8 +32,8 @@ function pprint() {
     case "${adj}" in
       bad) echo -e ${n} "${red}${msg}${normal}" ;;
       good) echo -e ${n} "${green}${msg}${normal}" ;;
-      head) echo -e ${n} "${blue}==>${normal} ${white}${bold}${msg}${normal}" ;;
-      subhead) echo -e ${n} "${green}==>${normal} ${white}${bold}${msg}${normal}" ;;
+      head) echo -e ${n} "${blue}==>${normal} ${white}${msg}${normal}" ;;
+      subhead) echo -e ${n} "${green}==>${normal} ${white}${msg}${normal}" ;;
       *) echo ${n} "${msg}" ;;
     esac
   fi
