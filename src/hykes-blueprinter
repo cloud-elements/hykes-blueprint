@@ -173,7 +173,7 @@ function decrypted() {
   state-crypto
   case "$?" in
     0) pprint okay 'false' ; return 1 ;;
-    *) pprint okay 'true' ; return 0 ;;
+    *) pprint okay 'true' ;;
   esac
 }
 
@@ -190,7 +190,7 @@ function encrypted() {
   pprint head 'Encrypted' ${quiet}
   state-crypto
   case "$?" in
-    0) pprint okay 'true' ; return 0 ;;
+    0) pprint okay 'true' ;;
     *) pprint okay 'false' ; return 1 ;;
   esac
 }
@@ -241,11 +241,17 @@ function init() {
 
 function list-servers() {
   pprint head 'Listing' ${quiet}
-  local inv="$(read-inventory)"
-  local unfurl="$(echo "${inv}" | xargs -I{} bash -c '! unfurl-inventory-role {}')"
-  case "${role}" in
-    '') echo "${unfurl}" ;;
-    *) echo "$(echo "${unfurl}" | grep "${role}")" ;;
+  state-crypto
+  case "$?" in
+    0) pprint bad 'failed (encrypted)' ; return 1 ;;
+    1)
+      local inv="$(read-inventory)"
+      local unfurl="$(echo "${inv}" | xargs -I{} bash -c '! unfurl-inventory-role {}')"
+      case "${role}" in
+        '') echo "${unfurl}" ;;
+        *) echo "$(echo "${unfurl}" | grep "${role}")" ;;
+      esac
+    ;;
   esac
 }
 
