@@ -20,6 +20,7 @@ function pprint() {
   while (( "$#" )); do
     case "${1}" in
       -n) local n='-n' ; shift ;;
+      -q) local q='-q' ; shift ;;
       *)
         test -n "${1}" && test -n "${adj}" && local msg=${1}
         test -n "${1}" && test -z "${adj}" && local adj=${1}
@@ -28,12 +29,15 @@ function pprint() {
     esac
   done
 
-  case "${adj}" in
-    bad) echo -e ${n} "${red}${msg}${normal}" ;;
-    good) echo -e ${n} "${green}${msg}${normal}" ;;
-    head) echo -e ${n} "${blue}==>${normal} ${white}${bold}${msg}${normal}" ;;
-    *) echo ${n} "${msg}" ;;
-  esac
+  if [ -z "${q}" ]; then
+    case "${adj}" in
+      bad) echo -e ${n} "${red}${msg}${normal}" ;;
+      good) echo -e ${n} "${green}${msg}${normal}" ;;
+      head) echo -e ${n} "${blue}==>${normal} ${white}${bold}${msg}${normal}" ;;
+      subhead) echo -e ${n} "${green}==>${normal} ${white}${bold}${msg}${normal}" ;;
+      *) echo ${n} "${msg}" ;;
+    esac
+  fi
 }
 
 function read-config-path() {
@@ -53,12 +57,14 @@ while (( "$#" )); do
   case "${1}" in
     --password=*) password=${1/--password=/''} ; shift ;;
     --path=*) path=${1/--path=/''} ; shift ;;
+    --quiet) quiet='-q' ; shift ;;
     --role=*) role=${1/--role=/''} ; shift ;;
     --url=*) url=${1/--url=/''} ; shift ;;
-    -p*) password=${2} ; shift ; shift ;;
     -P*) path=${2} ; shift ; shift ;;
-    -r*) role=${2} ; shift ; shift ;;
     -U*) url=${2} ; shift ; shift ;;
+    -p*) password=${2} ; shift ; shift ;;
+    -q) quiet='-q' ; shift ;;
+    -r*) role=${2} ; shift ; shift ;;
     *)
       case "${cmd}" in
         decrypt|encrypt) test -n "${1}" && test -z "${password}" && password=${1} ;;
@@ -148,7 +154,7 @@ export -f unfurl-inventory-role
 
 ## Command functions ##############################################################################
 function decrypt() {
-  pprint head 'Decrypting'
+  pprint head 'Decrypting' ${quiet}
   state-crypto && write-tmp-password "${password}" && decrypt-blueprint
   case "$?" in
     0) return 0 ;;
@@ -157,16 +163,16 @@ function decrypt() {
 }
 
 function decrypted() {
-  pprint head 'Decrypted'
+  pprint head 'Decrypted' ${quiet}
   state-crypto
   case "$?" in
-    0) echo 'false' ; return 1 ;;
-    *) echo 'true' ;;
+    0) pprint okay 'false' ; return 1 ;;
+    *) pprint okay 'true' ; return 0 ;;
   esac
 }
 
 function encrypt() {
-  pprint head 'Encrypting'
+  pprint head 'Encrypting' ${quiet}
   ! state-crypto && write-tmp-password "${password}" && encrypt-blueprint
   case "$?" in
     0) return 0 ;;
@@ -175,11 +181,11 @@ function encrypt() {
 }
 
 function encrypted() {
-  pprint head 'Encrypted'
+  pprint head 'Encrypted' ${quiet}
   state-crypto
   case "$?" in
-    0) echo 'true' ;;
-    *) echo 'false' ; return 1 ;;
+    0) pprint okay 'true' ; return 0 ;;
+    *) pprint okay 'false' ; return 1 ;;
   esac
 }
 
@@ -188,12 +194,12 @@ function help() {
   local bin=${a[${#a[@]}-1]}
 
   echo 'Usage:'
-  echo "  ${bin} decrypt <password>"
-  echo "  ${bin} decrypted"
-  echo "  ${bin} encrypt <password>"
-  echo "  ${bin} encrypted"
-  echo "  ${bin} init <path> [url]"
-  echo "  ${bin} list-servers [role]"
+  echo "  ${bin} decrypt <password> [--quiet|-q]"
+  echo "  ${bin} decrypted [--quiet|-q]"
+  echo "  ${bin} encrypt <password> [--quiet|-q]"
+  echo "  ${bin} encrypted [--quiet|-q]"
+  echo "  ${bin} init <path> [url] [--quiet|-q]"
+  echo "  ${bin} list-servers [role] [--quiet|-q]"
   echo
   echo 'Configuration Commands:'
   echo '  init    Initialize to work against the given blueprint'
@@ -214,22 +220,23 @@ function help() {
 }
 
 function init() {
+  pprint head 'Initializing' ${quiet}
   test -n "${url}" && \
-    pprint head 'Cleaning' &&
+    pprint subhead 'Cleaning' ${quiet} &&
     { clean-blueprint || \
       { pprint bad 'failed' ; return 1; }; } && \
-    pprint head 'Cloning' && \
+    pprint subhead 'Cloning' ${quiet} && \
     { clone-blueprint "${url}" || \
       { pprint bad 'failed' ; return 1; }; }
 
-  pprint head 'Configuring'
+  pprint subhead 'Configuring' ${quiet}
   write-config-path "${path}"
 }
 
 function list-servers() {
+  pprint head 'Listing' ${quiet}
   local inv="$(read-inventory)"
   local unfurl="$(echo "${inv}" | xargs -I{} bash -c '! unfurl-inventory-role {}')"
-
   case "${role}" in
     '') echo "${unfurl}" ;;
     *) echo "$(echo "${unfurl}" | grep "${role}")" ;;
