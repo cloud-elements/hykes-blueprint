@@ -263,6 +263,6 @@ trap "delete-tmp-password" 0
 case "${cmd}" in
   --help|-h) help ; exit 0 ;;
   --version|-v) version ; exit 0 ;;
-  decrypt|decrypted|encrypt|encrypted|init|list-servers) "${cmd}" ; exit $? ;;
+  decrypt|decrypted|encrypt|encrypted|init|list-servers) "${cmd}" ; exit "$?" ;;
   *) help ; exit 1 ;;
 esac
