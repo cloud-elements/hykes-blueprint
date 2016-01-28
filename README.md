@@ -5,7 +5,7 @@
 [![license](http://img.shields.io/badge/license-apache-blue.svg)](LICENSE.md)
 [![slack](http://img.shields.io/badge/slack-join-blue.svg)](https://ce-success.herokuapp.com)
 [![docs](http://img.shields.io/badge/docs-read-blue.svg)](https://ce-onprem.readthedocs.org)
-[![circleci](https://circleci.com/gh/cloud-elements/hykes-blueprinter.svg?style=shield&circle-token=6190bf233e8b1bb1e36f654ce4d765ef249d020f)](https://circleci.com/gh/cloud-elements/hykes-blueprinter)
+[![circleci](https://circleci.com/gh/cloud-elements/hykes-blueprinter.svg?style=shield)](https://circleci.com/gh/cloud-elements/hykes-blueprinter)
 
 ## Grokking
 ![diagram](http://share.rockymadden.com/1I1A142Y1F3V/Image%202016-01-26%20at%201.06.49%20PM.png)
