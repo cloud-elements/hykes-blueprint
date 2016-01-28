@@ -160,11 +160,10 @@ export -f unfurl-inventory-role
 ## Command functions ##############################################################################
 function decrypt() {
   pprint head 'Decrypting' ${quiet}
-  state-crypto && write-tmp-password "${password}" && decrypt-blueprint
-  case "$?" in
-    0) return 0 ;;
-    *) pprint bad 'failed' ; return 1 ;;
-  esac
+  { state-crypto || \
+    { pprint bad 'failed (blueprint should be encrypted)' ; return 1; }; } && \
+  { write-tmp-password "${password}" && decrypt-blueprint || \
+    { pprint bad 'failed' ; return 1; }; }
 }
 
 function decrypted() {
@@ -178,11 +177,10 @@ function decrypted() {
 
 function encrypt() {
   pprint head 'Encrypting' ${quiet}
-  ! state-crypto && write-tmp-password "${password}" && encrypt-blueprint
-  case "$?" in
-    0) return 0 ;;
-    *) pprint bad 'failed' ; return 1 ;;
-  esac
+  { ! state-crypto || \
+    { pprint bad 'failed (blueprint should be decrypted)' ; return 1; }; } && \
+  { write-tmp-password "${password}" && encrypt-blueprint || \
+    { pprint bad 'failed' ; return 1; }; }
 }
 
 function encrypted() {
@@ -242,7 +240,7 @@ function list-servers() {
   pprint head 'Listing' ${quiet}
   state-crypto
   case "$?" in
-    0) pprint bad 'failed (encrypted)' ; return 1 ;;
+    0) pprint bad 'failed (blueprint should be decrypted)' ; return 1 ;;
     1)
       local inv="$(read-inventory)"
       local unfurl="$(echo "${inv}" | xargs -I{} bash -c '! unfurl-inventory-role {}')"
