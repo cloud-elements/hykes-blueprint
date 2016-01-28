@@ -6,3 +6,4 @@
 * Created `encrypt` command
 * Created `encrypted` command
 * Created `list-servers` command
+* Independently configurable/triggerable CircleCI testing of unit and integration tests

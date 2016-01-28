@@ -4,4 +4,5 @@ dependencies:
 
 test:
   override:
-    - make test
+    - if [ -n "${TEST_UNIT}" ]; then make test-unit; fi
+    - if [ -n "${TEST_INTEGRATION}" ]; then make test-integration; fi
