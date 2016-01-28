@@ -39,7 +39,6 @@ else ifeq (${uname}, Linux)
 	@sed -i "s|etcdir=|etcdir=${_etcdir}|g" ${bindir}/hykes-blueprinter
 	@sed -i "s|sed -i ''|sed -i|g" ${bindir}/hykes-blueprinter
 	@sed -i "s|greadlink|readlink|g" ${bindir}/hykes-blueprinter
-
 endif
 
 stub:
