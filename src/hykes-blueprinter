@@ -241,7 +241,7 @@ function list-servers() {
   state-crypto
   case "$?" in
     0) pprint bad 'failed (blueprint should be decrypted)' ${quiet} ; return 1 ;;
-    1)
+    *)
       local inv="$(read-inventory)"
       local unfurl="$(echo "${inv}" | xargs -I{} bash -c '! unfurl-inventory-role {}')"
       case "${role}" in
