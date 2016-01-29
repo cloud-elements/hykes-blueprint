@@ -1,13 +1,15 @@
 #!/usr/bin/env bats
 
 function setup() {
-  if [ -z "${HYKES_BLUEPRINTER_PUBLIC_URL}" ]; then
+  if [ -z "${HYKES_BLUEPRINTER_PUBLIC_PATH}" ] || \
+    [ -z "${HYKES_BLUEPRINTER_PUBLIC_URL}" ]; then
+
     skip 'Environment variables should exist'
   fi
 }
 
 @test 'init should download and configure a public blueprint repo' {
-  build/bin/hykes-blueprinter init build/tmp "${HYKES_BLUEPRINTER_PUBLIC_URL}"
+  build/bin/hykes-blueprinter init "${HYKES_BLUEPRINTER_PUBLIC_PATH}" "${HYKES_BLUEPRINTER_PUBLIC_URL}"
 }
 
 @test 'encrypt should encrypt a decrypted blueprint' {

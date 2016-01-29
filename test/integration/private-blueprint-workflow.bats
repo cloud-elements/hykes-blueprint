@@ -1,7 +1,8 @@
 #!/usr/bin/env bats
 
 function setup() {
-  if [ -z "${HYKES_BLUEPRINTER_PRIVATE_URL}" ] || \
+  if [ -z "${HYKES_BLUEPRINTER_PRIVATE_PATH}" ] || \
+    [ -z "${HYKES_BLUEPRINTER_PRIVATE_URL}" ] || \
     [ -z "${HYKES_BLUEPRINTER_PRIVATE_PASSWORD}" ]; then
 
     skip 'Environment variables should exist'
@@ -9,7 +10,7 @@ function setup() {
 }
 
 @test 'init should download and configure a private blueprint repo' {
-  build/bin/hykes-blueprinter init build/tmp "${HYKES_BLUEPRINTER_PRIVATE_URL}"
+  build/bin/hykes-blueprinter init "${HYKES_BLUEPRINTER_PRIVATE_PATH}" "${HYKES_BLUEPRINTER_PRIVATE_URL}"
 }
 
 @test 'decrypt should decrypt an encrypted blueprint' {
