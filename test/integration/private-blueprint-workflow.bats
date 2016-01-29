@@ -1,17 +1,19 @@
 #!/usr/bin/env bats
 
 function setup() {
-  if [ -z "${HYKES_BLUEPRINTER_URL_PRIVATE}" ] || [ -z "${HYKES_BLUEPRINTER_PASSWORD}" ]; then
+  if [ -z "${HYKES_BLUEPRINTER_PRIVATE_URL}" ] || \
+    [ -z "${HYKES_BLUEPRINTER_PRIVATE_PASSWORD}" ]; then
+
     skip 'Environment variables should exist'
   fi
 }
 
 @test 'init should download and configure a private blueprint repo' {
-  build/bin/hykes-blueprinter init build/tmp "${HYKES_BLUEPRINTER_URL_PRIVATE}"
+  build/bin/hykes-blueprinter init build/tmp "${HYKES_BLUEPRINTER_PRIVATE_URL}"
 }
 
 @test 'decrypt should decrypt an encrypted blueprint' {
-  build/bin/hykes-blueprinter decrypt --password="${HYKES_BLUEPRINTER_PASSWORD}"
+  build/bin/hykes-blueprinter decrypt --password="${HYKES_BLUEPRINTER_PRIVATE_PASSWORD}"
 }
 
 @test 'decrypted should exit 0 and output true with a decrypted blueprint' {
@@ -33,7 +35,7 @@ function setup() {
 }
 
 @test 'encrypt should encrypt a decrypted blueprint' {
-  build/bin/hykes-blueprinter encrypt --password="${HYKES_BLUEPRINTER_PASSWORD}"
+  build/bin/hykes-blueprinter encrypt --password="${HYKES_BLUEPRINTER_PRIVATE_PASSWORD}"
 }
 
 @test 'decrypted should exit 1 and output false with an encrypted blueprint' {
