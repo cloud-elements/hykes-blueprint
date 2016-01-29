@@ -214,7 +214,7 @@ function help() {
   echo '  encrypted    Output boolean indicating if encrypted'
   echo
   echo 'Discovery Commands:'
-  echo '  list-servers     Output unfurled servers from blueprint inventory'
+  echo '  list-servers    Output unfurled servers from blueprint inventory'
   echo
   echo 'More Information:'
   echo '  chat    https://ce-success.herokuapp.com'

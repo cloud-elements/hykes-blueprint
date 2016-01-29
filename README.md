@@ -58,7 +58,7 @@ Cryptography Commands:
   encrypted    Output boolean indicating if encrypted
 
 Discovery Commands:
-  list-servers     Output unfurled servers from blueprint inventory
+  list-servers    Output unfurled servers from blueprint inventory
 
 More Information:
   chat    https://ce-success.herokuapp.com
