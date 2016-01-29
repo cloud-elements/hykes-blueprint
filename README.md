@@ -69,6 +69,36 @@ More Information:
 > __PROTIP:__ All commands prompt for required arguments which were not provided via options or
 arguments. This allows for both traditional usage and also prompt-based usage.
 
+## Examples and Recipes
+
+### Init against existing local blueprint repo
+
+```bash
+$ hykes-blueprinter init ~/path/to/existing/blueprint/directory
+```
+
+### Init against public GitHub blueprint repo
+
+The local blueprint directory will have the contents of the public GitHub blueprint repo cloned
+into it.
+
+```bash
+$ hykes-blueprinter init ~/path/to/empty/blueprint/directory git@github.com:cloud-elements/example.com.git
+```
+
+### Init against private GitHub blueprint repo and decrypt
+
+The local blueprint directory will have the contents of the private GitHub blueprint repo cloned
+into it.
+
+```bash
+$ hykes-blueprinter init ~/path/to/empty/blueprint/directory git@github.com:cloud-elements/dev.ops.cloud-elements.com.git
+$ hykes-blueprinter decrypt
+```
+
+> __PROTIP:__ All authentication against remotes is handled via `git` itself. Ensure you have set up
+`git` so that `git clone` against the URL being provided to `hykes-blueprinter init` is successful.
+
 ## Changelog
 
 See [CHANGELOG.md](CHANGELOG.md)
