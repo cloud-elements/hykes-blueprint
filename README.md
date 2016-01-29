@@ -66,8 +66,11 @@ More Information:
   repo    https://github.com/cloud-elements/hykes-blueprinter
 ```
 
-> __PROTIP:__ All commands prompt for required arguments which were not provided via options or
-arguments. This allows for both traditional usage and also prompt-based usage.
+> __PROTIPS:__
+* All commands prompt for required arguments which were not provided via options or arguments. This
+allows for both traditional usage and also prompt-based usage.
+* All arguments can be provided as options (e.g. `[--password|-p <password>]`, `[--path|-P <path>]`,
+`[--role|-r <role>]`, `[--url|-U <url>]`).
 
 ## Examples and Recipes
 
