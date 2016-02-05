@@ -8,10 +8,6 @@ dependencies:
     - sudo apt-get install bats
     - sudo apt-get install git
 
-  post:
-    - make
-    - make install
-
 test:
   override:
     - if [ -n "${TEST_UNIT}" ]; then make test-unit; fi
