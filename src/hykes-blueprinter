@@ -87,7 +87,7 @@ case "${cmd}" in
   init) test -z "${path}" && read -e -p 'Enter path: ' path ;;
 esac
 case "${cmd}" in
-  decrypt|encrypt) test -z "${password}" && read -e -p 'Enter password: ' -s password; echo ;;
+  decrypt|encrypt) test -z "${password}" && read -e -p 'Enter password: ' -s password ; echo ;;
 esac
 
 ## Argument and option defaults ###################################################################
