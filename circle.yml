@@ -1,6 +1,12 @@
 dependencies:
   pre:
-    - sudo make apt
+    - sudo apt-add-repository ppa:ansible/ansible -y
+    - sudo add-apt-repository ppa:duggan/bats -y
+    - sudo apt-get update
+    - sudo apt-get install software-properties-common
+    - sudo apt-get install ansible
+    - sudo apt-get install bats
+    - sudo apt-get install git
 
 test:
   override:
