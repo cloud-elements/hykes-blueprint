@@ -24,7 +24,7 @@ $ hykes-blueprinter init
 
 In development
 
-### Compiling from Source
+### Compiling from Source:
 
 ```bash
 $ git clone git@github.com:cloud-elements/hykes-blueprinter.git
@@ -77,13 +77,13 @@ allows for both traditional usage and also prompt-based usage.
 
 ## Examples and Recipes
 
-### Init against existing local blueprint repo
+### Init against existing local blueprint repo:
 
 ```bash
 $ hykes-blueprinter init ~/path/to/existing/blueprint/directory
 ```
 
-### Init against public GitHub blueprint repo
+### Init against public GitHub blueprint repo:
 
 The local blueprint directory will have the contents of the public GitHub blueprint repo cloned
 into it.
@@ -92,7 +92,7 @@ into it.
 $ hykes-blueprinter init ~/path/to/empty/blueprint/directory git@github.com:cloud-elements/example.com.git
 ```
 
-### Init against private GitHub blueprint repo and decrypt
+### Init against private GitHub blueprint repo and decrypt:
 
 The local blueprint directory will have the contents of the private GitHub blueprint repo cloned
 into it.
