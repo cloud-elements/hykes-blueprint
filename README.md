@@ -12,29 +12,32 @@
 
 ## Installation
 
-### Via `brew`:
+### Via Homebrew:
 
 ```bash
-$ brew tap cloud-elements/hykes git@github.com:cloud-elements/homebrew-hykes.git
+$ brew tap cloud-elements/hykes
 $ brew install hykes-blueprinter
 $ hykes-blueprinter init
 ```
 
-### Via `git clone`:
+### Via PPA:
+
+In development
+
+### Compiling from Source
 
 ```bash
 $ git clone git@github.com:cloud-elements/hykes-blueprinter.git
 $ cd hykes-blueprinter
-$ git checkout tags/v0.0.0
-$ make dependencies
+$ make
 $ make install
 $ build/bin/hykes-blueprinter init
 ```
 
-> __PROTIPS:__
-* `git clone` installation method does not place `hykes-blueprinter` on your `PATH`, so you must
-reference it relatively (e.g. `build/bin/hykes-blueprinter`).
-* `make dependencies` on Linux requires `sudo`.
+> __PROTIP:__
+You are responsible for ensuring all dependencies are installed, including transitive dependencies.
+Examine [circle.yml](circle.yml) for a detailed example of the steps needed to compile from source
+on Ubuntu.
 
 ## Usage
 
