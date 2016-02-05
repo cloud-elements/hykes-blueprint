@@ -1,4 +1,4 @@
-## v0.0.0 <sub><sup>(TBD)</sup></sub>
+## v0.0.0 <sub><sup>(2016-02-04)</sup></sub>
 
 #### Highlights
 * Created `decrypt` command
