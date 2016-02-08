@@ -4,7 +4,7 @@
 [![branching](http://img.shields.io/badge/branching-github%20flow-blue.svg)](https://guides.github.com/introduction/flow/)
 [![license](http://img.shields.io/badge/license-apache-blue.svg)](LICENSE.md)
 [![chat](http://img.shields.io/badge/chat-slack-blue.svg)](https://ce-success.herokuapp.com)
-[![docs](http://img.shields.io/badge/docs-repo-blue.svg)](https://ce-onprem.readthedocs.org)
+[![docs](http://img.shields.io/badge/docs-repo-blue.svg)](https://github.com/cloud-elements/hykes-docs)
 [![circleci](https://circleci.com/gh/cloud-elements/hykes-blueprinter.svg?style=shield)](https://circleci.com/gh/cloud-elements/hykes-blueprinter)
 
 ## Installation
@@ -62,7 +62,7 @@ Discovery Commands:
 
 More Information:
   chat    https://ce-success.herokuapp.com
-  docs    https://ce-onprem.readthedocs.org
+  docs    https://github.com/cloud-elements/hykes-docs
   repo    https://github.com/cloud-elements/hykes-blueprinter
 ```
 
