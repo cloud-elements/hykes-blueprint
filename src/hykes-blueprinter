@@ -84,7 +84,7 @@ done
 
 ## Argument and option prompting ##################################################################
 case "${cmd}" in
-  init) test -z "${path}" && read -e -p 'Enter path: ' path ;;
+  init) test -z "${path}" && read -e -p 'Enter local blueprint path: ' path ;;
 esac
 case "${cmd}" in
   decrypt|encrypt) test -z "${password}" && read -e -p 'Enter password: ' -s password ; echo ;;
