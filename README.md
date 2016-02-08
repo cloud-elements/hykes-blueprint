@@ -7,9 +7,6 @@
 [![docs](http://img.shields.io/badge/docs-repo-blue.svg)](https://ce-onprem.readthedocs.org)
 [![circleci](https://circleci.com/gh/cloud-elements/hykes-blueprinter.svg?style=shield)](https://circleci.com/gh/cloud-elements/hykes-blueprinter)
 
-## Grokking
-![diagram](http://share.rockymadden.com/1I1A142Y1F3V/Image%202016-01-26%20at%201.06.49%20PM.png)
-
 ## Installation
 
 ### Via Homebrew:
