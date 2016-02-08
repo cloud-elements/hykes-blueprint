@@ -1,14 +1,12 @@
 # hykes-blueprinter <sub><sup>| Cloud Elements cloud blueprint utility</sup></sub>
 [![version](http://img.shields.io/badge/version-v0.0.0-blue.svg)](CHANGELOG.md)
-[![versioning](http://img.shields.io/badge/versioning-semver-blue.svg)](http://semver.org/)
+[![versioning](http://img.shields.io/badge/versioning-semver-blue.svg)](http://semver.org)
 [![branching](http://img.shields.io/badge/branching-github%20flow-blue.svg)](https://guides.github.com/introduction/flow/)
 [![license](http://img.shields.io/badge/license-apache-blue.svg)](LICENSE.md)
-[![slack](http://img.shields.io/badge/slack-join-blue.svg)](https://ce-success.herokuapp.com)
-[![docs](http://img.shields.io/badge/docs-read-blue.svg)](https://ce-onprem.readthedocs.org)
+[![pm](http://img.shields.io/badge/pm-zenhub-blue.svg)](https://www.zenhub.io)
+[![docs](http://img.shields.io/badge/docs-repo-blue.svg)](https://github.com/cloud-elements/hykes-docs)
+[![chat](http://img.shields.io/badge/chat-slack-blue.svg)](https://ce-success.herokuapp.com)
 [![circleci](https://circleci.com/gh/cloud-elements/hykes-blueprinter.svg?style=shield)](https://circleci.com/gh/cloud-elements/hykes-blueprinter)
-
-## Grokking
-![diagram](http://share.rockymadden.com/1I1A142Y1F3V/Image%202016-01-26%20at%201.06.49%20PM.png)
 
 ## Installation
 
@@ -65,7 +63,7 @@ Discovery Commands:
 
 More Information:
   chat    https://ce-success.herokuapp.com
-  docs    https://ce-onprem.readthedocs.org
+  docs    https://github.com/cloud-elements/hykes-docs
   repo    https://github.com/cloud-elements/hykes-blueprinter
 ```
 

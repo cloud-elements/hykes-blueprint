@@ -218,7 +218,7 @@ function help() {
   echo
   echo 'More Information:'
   echo '  chat    https://ce-success.herokuapp.com'
-  echo '  docs    https://ce-onprem.readthedocs.org'
+  echo '  docs    https://github.com/cloud-elements/hykes-docs'
   echo '  repo    https://github.com/cloud-elements/hykes-blueprinter'
 }
 
