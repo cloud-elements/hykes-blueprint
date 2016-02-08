@@ -84,7 +84,7 @@ done
 
 ## Argument and option prompting ##################################################################
 case "${cmd}" in
-  init) test -z "${path}" && read -e -p 'Enter path: ' path ;;
+  init) test -z "${path}" && read -e -p 'Enter local blueprint path: ' path ;;
 esac
 case "${cmd}" in
   decrypt|encrypt) test -z "${password}" && read -e -p 'Enter password: ' -s password ; echo ;;
@@ -113,7 +113,7 @@ export -f count-inventory-role
 function decrypt-blueprint() {
   if [ "$(find "${path}" -type d | grep -v '.git' | wc -l | tr ' ' '\0')" -gt 1 ]; then
     find "${path}"/**/* -type f | grep -v '.git' | grep -v '.DS_Store' | \
-      xargs -P 4 -I{} ansible-vault decrypt '{}' --vault-password-file="${etcdir}/password" > /dev/null 2>&1
+      xargs -P 2 -I{} ansible-vault decrypt '{}' --vault-password-file="${etcdir}/password" > /dev/null 2>&1
   fi
 
   ansible-vault decrypt "${path}/hykes.ini" --vault-password-file="${etcdir}/password" > /dev/null 2>&1 && \
@@ -124,7 +124,7 @@ export -f decrypt-blueprint
 function encrypt-blueprint() {
   if [ "$(find "${path}" -type d | grep -v '.git' | wc -l | tr ' ' '\0')" -gt 1 ]; then
     find "${path}"/**/* -type f | grep -v '.git' | grep -v '.DS_Store' | \
-      xargs -P 4 -I{} ansible-vault encrypt '{}' --vault-password-file="${etcdir}/password" > /dev/null 2>&1
+      xargs -P 2 -I{} ansible-vault encrypt '{}' --vault-password-file="${etcdir}/password" > /dev/null 2>&1
   fi
 
   ansible-vault encrypt "${path}/hykes.ini" --vault-password-file="${etcdir}/password" > /dev/null 2>&1 && \

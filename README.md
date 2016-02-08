@@ -13,8 +13,11 @@
 ### Via Homebrew:
 
 ```bash
+# Install via tap:
 $ brew tap cloud-elements/hykes
 $ brew install hykes-blueprinter
+
+# Initialize:
 $ hykes-blueprinter init
 ```
 
