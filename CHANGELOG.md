@@ -1,3 +1,9 @@
+## v0.0.1 <sub><sup>(2016-02-08)</sup></sub>
+
+#### Highlights
+* Minor usage updates
+* Minor documentation updates
+
 ## v0.0.0 <sub><sup>(2016-02-04)</sup></sub>
 
 #### Highlights
