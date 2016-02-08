@@ -233,7 +233,11 @@ function init() {
       { pprint bad 'failed' ${quiet} ; return 1; }; }
 
   pprint subhead 'Configuring' ${quiet}
-  write-config-path $(greadlink -f "${path}")
+  local gp ; gp=$(greadlink -f "${path}")
+  case "$?" in
+    0) write-config-path "${gp}" ;;
+    *) pprint bad 'failed (path should exist)' ${quiet} ; return 1 ;;
+  esac
 }
 
 function list-servers() {
