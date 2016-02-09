@@ -25,7 +25,7 @@ $ hykes-blueprinter init
 
 In development
 
-### Compiling from Source:
+### Via Compiling from Source:
 
 ```bash
 $ git clone git@github.com:cloud-elements/hykes-blueprinter.git
