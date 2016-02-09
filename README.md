@@ -80,6 +80,8 @@ allows for both traditional usage and also prompt-based usage.
 
 ### Work against existing local blueprint repo:
 
+It is assumed, in this example, that the local blueprint repo is decrypted.
+
 ```bash
 $ hykes-blueprinter init \
     ~/path/to/existing/blueprint/directory
@@ -88,7 +90,7 @@ $ hykes-blueprinter init \
 ### Work against public GitHub blueprint repo:
 
 The local blueprint directory will have the contents of the public GitHub blueprint repo cloned
-into it. It is assumed, in this example, that the GitHub blueprint repo is already decrypted.
+into it. It is assumed, in this example, that the GitHub blueprint repo is decrypted.
 
 ```bash
 $ hykes-blueprinter init \
