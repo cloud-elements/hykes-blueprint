@@ -98,13 +98,13 @@ $ hykes-blueprinter init \
     /path/to/empty/blueprint/directory \
     git@github.com:cloud-elements/example.com.git
 
-# Change directory to local blueprint repo
+# Change directory to local blueprint:
 $ cd /path/to/empty/blueprint/directory
 
-# Modify files in /path/to/empty/blueprint/directory
+# Modify local blueprint:
 ...
 
-# Commit and push to GitHub blueprint repo
+# Commit and push local blueprint to GitHub blueprint repo:
 $ git add -A
 $ git commit -m 'Message'
 $ git push origin master
@@ -119,10 +119,27 @@ The local blueprint directory will have the contents of the private GitHub bluep
 into it. It is assumed, in this example, that the GitHub blueprint repo is encrypted.
 
 ```bash
+# Initialize:
 $ hykes-blueprinter init \
     /path/to/empty/blueprint/directory \
     git@github.com:cloud-elements/dev.ops.cloud-elements.com.git
+
+# Decrypt local blueprint:
 $ hykes-blueprinter decrypt
+
+# Change directory to local blueprint:
+$ cd /path/to/empty/blueprint/directory
+
+# Modify local blueprint:
+...
+
+# Encrypt local blueprint:
+$ hykes-blueprinter encrypt
+
+# Commit and push local blueprint to GitHub blueprint repo:
+$ git add -A
+$ git commit -m 'Message'
+$ git push origin master
 ```
 
 > __PROTIP:__ All authentication against remotes is handled via `git` itself. Ensure you have set up
