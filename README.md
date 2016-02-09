@@ -25,7 +25,7 @@ $ hykes-blueprinter init
 
 In development
 
-### Via Compiling from Source:
+### Via compiling from source:
 
 ```bash
 $ git clone git@github.com:cloud-elements/hykes-blueprinter.git
@@ -78,28 +78,36 @@ allows for both traditional usage and also prompt-based usage.
 
 ## Examples and Recipes
 
-### Init against existing local blueprint repo:
+### Work against existing local blueprint repo:
 
 ```bash
-$ hykes-blueprinter init ~/path/to/existing/blueprint/directory
+$ hykes-blueprinter init \
+    ~/path/to/existing/blueprint/directory
 ```
 
-### Init against public GitHub blueprint repo:
+### Work against public GitHub blueprint repo:
 
 The local blueprint directory will have the contents of the public GitHub blueprint repo cloned
-into it.
+into it. It is assumed, in this example, that the GitHub blueprint repo is already decrypted.
 
 ```bash
-$ hykes-blueprinter init ~/path/to/empty/blueprint/directory git@github.com:cloud-elements/example.com.git
+$ hykes-blueprinter init \
+    ~/path/to/empty/blueprint/directory \
+    git@github.com:cloud-elements/example.com.git
 ```
 
-### Init against private GitHub blueprint repo and decrypt:
+> __PROTIP:__ All authentication against remotes is handled via `git` itself. Ensure you have set up
+`git` so that `git clone` against the URL being provided to `hykes-blueprinter init` is successful.
+
+### Work against private GitHub blueprint repo:
 
 The local blueprint directory will have the contents of the private GitHub blueprint repo cloned
-into it.
+into it. It is assumed, in this example, that the GitHub blueprint repo is encrypted.
 
 ```bash
-$ hykes-blueprinter init ~/path/to/empty/blueprint/directory git@github.com:cloud-elements/dev.ops.cloud-elements.com.git
+$ hykes-blueprinter init \
+    ~/path/to/empty/blueprint/directory \
+    git@github.com:cloud-elements/dev.ops.cloud-elements.com.git
 $ hykes-blueprinter decrypt
 ```
 
