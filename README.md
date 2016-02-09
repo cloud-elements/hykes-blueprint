@@ -25,7 +25,7 @@ $ hykes-blueprinter init
 
 In development
 
-### Compiling from Source:
+### Via compiling from source:
 
 ```bash
 $ git clone git@github.com:cloud-elements/hykes-blueprinter.git
@@ -78,29 +78,68 @@ allows for both traditional usage and also prompt-based usage.
 
 ## Examples and Recipes
 
-### Init against existing local blueprint repo:
+### Work against existing local blueprint repo:
+
+It is assumed, in this example, that the local blueprint repo is decrypted.
 
 ```bash
-$ hykes-blueprinter init ~/path/to/existing/blueprint/directory
+$ hykes-blueprinter init \
+    /path/to/existing/blueprint/directory
 ```
 
-### Init against public GitHub blueprint repo:
+### Work against public GitHub blueprint repo:
 
 The local blueprint directory will have the contents of the public GitHub blueprint repo cloned
-into it.
+into it. It is assumed, in this example, that the GitHub blueprint repo is decrypted.
 
 ```bash
-$ hykes-blueprinter init ~/path/to/empty/blueprint/directory git@github.com:cloud-elements/example.com.git
+# Initialize:
+$ hykes-blueprinter init \
+    /path/to/empty/blueprint/directory \
+    git@github.com:cloud-elements/example.com.git
+
+# Change directory to local blueprint:
+$ cd /path/to/empty/blueprint/directory
+
+# Modify local blueprint:
+...
+
+# Commit and push local blueprint to GitHub blueprint repo:
+$ git add -A
+$ git commit -m 'Message'
+$ git push origin master
 ```
 
-### Init against private GitHub blueprint repo and decrypt:
+> __PROTIP:__ All authentication against remotes is handled via `git` itself. Ensure you have set up
+`git` so that `git clone` against the URL being provided to `hykes-blueprinter init` is successful.
+
+### Work against private GitHub blueprint repo:
 
 The local blueprint directory will have the contents of the private GitHub blueprint repo cloned
-into it.
+into it. It is assumed, in this example, that the GitHub blueprint repo is encrypted.
 
 ```bash
-$ hykes-blueprinter init ~/path/to/empty/blueprint/directory git@github.com:cloud-elements/dev.ops.cloud-elements.com.git
+# Initialize:
+$ hykes-blueprinter init \
+    /path/to/empty/blueprint/directory \
+    git@github.com:cloud-elements/dev.ops.cloud-elements.com.git
+
+# Decrypt local blueprint:
 $ hykes-blueprinter decrypt
+
+# Change directory to local blueprint:
+$ cd /path/to/empty/blueprint/directory
+
+# Modify local blueprint:
+...
+
+# Encrypt local blueprint:
+$ hykes-blueprinter encrypt
+
+# Commit and push local blueprint to GitHub blueprint repo:
+$ git add -A
+$ git commit -m 'Message'
+$ git push origin master
 ```
 
 > __PROTIP:__ All authentication against remotes is handled via `git` itself. Ensure you have set up
