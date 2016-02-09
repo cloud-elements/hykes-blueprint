@@ -84,7 +84,7 @@ It is assumed, in this example, that the local blueprint repo is decrypted.
 
 ```bash
 $ hykes-blueprinter init \
-    ~/path/to/existing/blueprint/directory
+    /path/to/existing/blueprint/directory
 ```
 
 ### Work against public GitHub blueprint repo:
@@ -93,9 +93,21 @@ The local blueprint directory will have the contents of the public GitHub bluepr
 into it. It is assumed, in this example, that the GitHub blueprint repo is decrypted.
 
 ```bash
+# Initialize:
 $ hykes-blueprinter init \
-    ~/path/to/empty/blueprint/directory \
+    /path/to/empty/blueprint/directory \
     git@github.com:cloud-elements/example.com.git
+
+# Change directory to local blueprint repo
+$ cd /path/to/empty/blueprint/directory
+
+# Modify files in /path/to/empty/blueprint/directory
+...
+
+# Commit and push to GitHub blueprint repo
+$ git add -A
+$ git commit -m 'Message'
+$ git push origin master
 ```
 
 > __PROTIP:__ All authentication against remotes is handled via `git` itself. Ensure you have set up
@@ -108,7 +120,7 @@ into it. It is assumed, in this example, that the GitHub blueprint repo is encry
 
 ```bash
 $ hykes-blueprinter init \
-    ~/path/to/empty/blueprint/directory \
+    /path/to/empty/blueprint/directory \
     git@github.com:cloud-elements/dev.ops.cloud-elements.com.git
 $ hykes-blueprinter decrypt
 ```
