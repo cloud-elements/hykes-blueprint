@@ -8,6 +8,7 @@ cmd="${1}" ; shift
 function delete-tmp-password() {
   test -f "${etcdir}/password" && rm -f "${etcdir}/password"
 }
+export -f delete-tmp-password
 
 function pprint() {
   local blue='\033[1;34m'
@@ -38,18 +39,22 @@ function pprint() {
     esac
   fi
 }
+export -f pprint
 
 function read-config-path() {
   echo $(test -f "${etcdir}/hykes-blueprinter" && sed -n '1p' < "${etcdir}/hykes-blueprinter")
 }
+export -f read-config-path
 
 function write-config-path() {
   echo "${1}" > "${etcdir}/hykes-blueprinter"
 }
+export -f write-config-path
 
 function write-tmp-password() {
   echo "${1}" > "${etcdir}/password"
 }
+export -f write-tmp-password
 
 ## Argument and option parsing ####################################################################
 while (( "$#" )); do
