@@ -65,9 +65,9 @@ Discovery Commands:
   list-servers    Output unfurled servers from blueprint inventory
 
 More Information:
-  chat    https://ce-success.herokuapp.com
-  docs    https://github.com/cloud-elements/hykes-docs
-  repo    https://github.com/cloud-elements/hykes-blueprinter
+  docs     http://dev.cloud-elements.com
+  forum    http://forum.cloud-elements.com
+  repo     https://github.com/cloud-elements/hykes-blueprinter
 ```
 
 > __PROTIPS:__
