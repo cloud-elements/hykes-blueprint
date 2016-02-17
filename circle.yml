@@ -10,5 +10,5 @@ dependencies:
 
 test:
   override:
-    - if [ "${TEST_UNIT}" -eq 0 ]; then make test-unit; fi
-    - if [ "${TEST_INTEGRATION}" -eq 0 ]; then make test-integration; fi
+    - if [ -n "${TEST_UNIT}" ] && [ "${TEST_UNIT}" -eq 0 ]; then make test-unit; fi
+    - if [ -n "${TEST_INTEGRATION}" ] && [ "${TEST_INTEGRATION}" -eq 0 ]; then make test-integration; fi
