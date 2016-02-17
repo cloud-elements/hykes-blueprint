@@ -1,3 +1,11 @@
+## v0.0.2 <sub><sup>(2016-02-17)</sup></sub>
+
+#### Highlights
+* Renamed project from `hykes-blueprinter` to `hykes-blueprint`
+* Improved CircleCI environment variable trigger detection
+* Added more robust path checking to `init`
+* Added example documentation
+
 ## v0.0.1 <sub><sup>(2016-02-08)</sup></sub>
 
 #### Highlights
