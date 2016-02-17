@@ -10,15 +10,15 @@ install: | stub
 ifeq (${uname}, Darwin)
 	@$(eval _bindir := $(shell greadlink -f ${bindir}))
 	@$(eval _etcdir := $(shell greadlink -f ${etcdir}))
-	@sed -i '' "s|bindir=|bindir=${_bindir}|g" ${bindir}/hykes-blueprinter
-	@sed -i '' "s|etcdir=|etcdir=${_etcdir}|g" ${bindir}/hykes-blueprinter
+	@sed -i '' "s|bindir=|bindir=${_bindir}|g" ${bindir}/hykes-blueprint
+	@sed -i '' "s|etcdir=|etcdir=${_etcdir}|g" ${bindir}/hykes-blueprint
 else ifeq (${uname}, Linux)
 	@$(eval _bindir := $(shell readlink -f ${bindir}))
 	@$(eval _etcdir := $(shell readlink -f ${etcdir}))
-	@sed -i "s|bindir=|bindir=${_bindir}|g" ${bindir}/hykes-blueprinter
-	@sed -i "s|etcdir=|etcdir=${_etcdir}|g" ${bindir}/hykes-blueprinter
-	@sed -i "s|sed -i ''|sed -i|g" ${bindir}/hykes-blueprinter
-	@sed -i "s|greadlink|readlink|g" ${bindir}/hykes-blueprinter
+	@sed -i "s|bindir=|bindir=${_bindir}|g" ${bindir}/hykes-blueprint
+	@sed -i "s|etcdir=|etcdir=${_etcdir}|g" ${bindir}/hykes-blueprint
+	@sed -i "s|sed -i ''|sed -i|g" ${bindir}/hykes-blueprint
+	@sed -i "s|greadlink|readlink|g" ${bindir}/hykes-blueprint
 endif
 
 stub:

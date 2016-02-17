@@ -42,12 +42,12 @@ function pprint() {
 export -f pprint
 
 function read-config-path() {
-  echo $(test -f "${etcdir}/hykes-blueprinter" && sed -n '1p' < "${etcdir}/hykes-blueprinter")
+  echo $(test -f "${etcdir}/hykes-blueprint" && sed -n '1p' < "${etcdir}/hykes-blueprint")
 }
 export -f read-config-path
 
 function write-config-path() {
-  echo "${1}" > "${etcdir}/hykes-blueprinter"
+  echo "${1}" > "${etcdir}/hykes-blueprint"
 }
 export -f write-config-path
 
@@ -224,7 +224,7 @@ function help() {
   echo 'More Information:'
   echo '  docs     http://dev.cloud-elements.com'
   echo '  forum    http://forum.cloud-elements.com'
-  echo '  repo     https://github.com/cloud-elements/hykes-blueprinter'
+  echo '  repo     https://github.com/cloud-elements/hykes-blueprint'
 }
 
 function init() {
