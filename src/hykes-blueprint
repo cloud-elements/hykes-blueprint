@@ -180,8 +180,8 @@ function help() {
   echo '  ls    Output unfurled servers from blueprint inventory'
   echo
   echo 'More Information:'
-  echo '  docs     http://dev.cloud-elements.com'
-  echo '  forum    http://forum.cloud-elements.com'
+  echo '  docs     https://developers.cloud-elements.com'
+  echo '  forum    https://forum.cloud-elements.com'
   echo '  repo     https://github.com/cloud-elements/hykes-blueprint'
 }
 
