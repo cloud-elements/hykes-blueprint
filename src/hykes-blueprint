@@ -1,12 +1,10 @@
 #!/usr/bin/env bash
 
-bindir=
-etcdir=
 cmd="${1}" ; shift
 
 ## Global utility functions #######################################################################
 function delete-tmp-password() {
-  test -f "${etcdir}/password" && rm -f "${etcdir}/password"
+  test -f "$(pwd)/.pass" && rm -f "$(pwd)/.pass"
 }
 export -f delete-tmp-password
 
@@ -41,18 +39,8 @@ function pprint() {
 }
 export -f pprint
 
-function read-config-path() {
-  echo $(test -f "${etcdir}/hykes-blueprint" && sed -n '1p' < "${etcdir}/hykes-blueprint")
-}
-export -f read-config-path
-
-function write-config-path() {
-  echo "${1}" > "${etcdir}/hykes-blueprint"
-}
-export -f write-config-path
-
 function write-tmp-password() {
-  echo "${1}" > "${etcdir}/password"
+  echo "${1}" > "$(pwd)/.pass"
 }
 export -f write-tmp-password
 
@@ -60,24 +48,14 @@ export -f write-tmp-password
 while (( "$#" )); do
   case "${1}" in
     --password=*) password=${1/--password=/''} ; shift ;;
-    --path=*) path=${1/--path=/''} ; shift ;;
     --quiet) quiet='-q' ; shift ;;
     --role=*) role=${1/--role=/''} ; shift ;;
-    --url=*) url=${1/--url=/''} ; shift ;;
-    -P*) path=${2} ; shift ; shift ;;
-    -U*) url=${2} ; shift ; shift ;;
     -p*) password=${2} ; shift ; shift ;;
     -q) quiet='-q' ; shift ;;
     -r*) role=${2} ; shift ; shift ;;
     *)
       case "${cmd}" in
         decrypt|encrypt) test -n "${1}" && test -z "${password}" && password=${1} ;;
-      esac
-      case "${cmd}" in
-        init)
-          test -n "${1}" && test -n "${path}" && url=${1}
-          test -n "${1}" && test -z "${path}" && path=${1}
-        ;;
       esac
       case "${cmd}" in
         list-servers) test -n "${1}" && test -z "${role}" && role=${1} ;;
@@ -89,26 +67,10 @@ done
 
 ## Argument and option prompting ##################################################################
 case "${cmd}" in
-  init) test -z "${path}" && read -e -p 'Enter local blueprint path: ' path ;;
-esac
-case "${cmd}" in
   decrypt|encrypt) test -z "${password}" && read -e -p 'Enter password: ' -s password ; echo ;;
 esac
 
-## Argument and option defaults ###################################################################
-test -z "${path}" && path=$(read-config-path)
-
 ## Command utility functions ######################################################################
-function clean-blueprint() {
-  rm -rf "${path}"
-}
-export -f clean-blueprint
-
-function clone-blueprint() {
-  git clone "${1}" "${path}"
-}
-export -f clone-blueprint
-
 function count-inventory-role() {
   local upper=$(slice-inventory-role "${1}" | tail -c 3 | head -c 1)
   echo "$(( upper + 1 ))"
@@ -116,29 +78,29 @@ function count-inventory-role() {
 export -f count-inventory-role
 
 function decrypt-blueprint() {
-  if [ "$(find "${path}" -type d | grep -v '.git' | wc -l | tr ' ' '\0')" -gt 1 ]; then
-    find "${path}"/**/* -type f | grep -v '.git' | grep -v '.DS_Store' | \
-      xargs -P 2 -I{} ansible-vault decrypt '{}' --vault-password-file="${etcdir}/password" > /dev/null 2>&1
+  if [ "$(find $(pwd) -type d | grep -v '.git' | wc -l | tr ' ' '\0')" -gt 1 ]; then
+    find $(pwd)/**/* -type f | grep -v '.git' | grep -v '.DS_Store' | \
+      xargs -P 2 -I{} ansible-vault decrypt '{}' --vault-password-file="$(pwd)/.pass" > /dev/null 2>&1
   fi
 
-  ansible-vault decrypt "${path}/hykes.ini" --vault-password-file="${etcdir}/password" > /dev/null 2>&1 && \
-  ansible-vault decrypt "${path}/hykes.yml" --vault-password-file="${etcdir}/password" > /dev/null 2>&1
+  ansible-vault decrypt "$(pwd)/hykes.ini" --vault-password-file="$(pwd)/.pass" > /dev/null 2>&1 && \
+  ansible-vault decrypt "$(pwd)/hykes.yml" --vault-password-file="$(pwd)/.pass" > /dev/null 2>&1
 }
 export -f decrypt-blueprint
 
 function encrypt-blueprint() {
-  if [ "$(find "${path}" -type d | grep -v '.git' | wc -l | tr ' ' '\0')" -gt 1 ]; then
-    find "${path}"/**/* -type f | grep -v '.git' | grep -v '.DS_Store' | \
-      xargs -P 2 -I{} ansible-vault encrypt '{}' --vault-password-file="${etcdir}/password" > /dev/null 2>&1
+  if [ "$(find $(pwd) -type d | grep -v '.git' | wc -l | tr ' ' '\0')" -gt 1 ]; then
+    find $(pwd)/**/* -type f | grep -v '.git' | grep -v '.DS_Store' | \
+      xargs -P 2 -I{} ansible-vault encrypt '{}' --vault-password-file="$(pwd)/.pass" > /dev/null 2>&1
   fi
 
-  ansible-vault encrypt "${path}/hykes.ini" --vault-password-file="${etcdir}/password" > /dev/null 2>&1 && \
-  ansible-vault encrypt "${path}/hykes.yml" --vault-password-file="${etcdir}/password" > /dev/null 2>&1
+  ansible-vault encrypt "$(pwd)/hykes.ini" --vault-password-file="$(pwd)/.pass" > /dev/null 2>&1 && \
+  ansible-vault encrypt "$(pwd)/hykes.yml" --vault-password-file="$(pwd)/.pass" > /dev/null 2>&1
 }
 export -f encrypt-blueprint
 
 function read-inventory() {
-  test -f "${path}/hykes.ini" && tr ' ' '\n' < "${path}/hykes.ini" | egrep --color=never '^.+\[[0-9\:]+\]\.'
+  test -f "$(pwd)/hykes.ini" && tr ' ' '\n' < "$(pwd)/hykes.ini" | egrep --color=never '^.+\[[0-9\:]+\]\.'
 }
 export -f read-inventory
 
@@ -148,7 +110,7 @@ function slice-inventory-role() {
 export -f slice-inventory-role
 
 function state-crypto() {
-  head -n 1 "${path}/hykes.yml" 2>/dev/null | grep -q '$ANSIBLE_VAULT'
+  head -n 1 "$(pwd)/hykes.yml" 2>/dev/null | grep -q '$ANSIBLE_VAULT'
 }
 export -f state-crypto
 
@@ -206,11 +168,7 @@ function help() {
   echo "  ${bin} decrypted [--quiet|-q]"
   echo "  ${bin} encrypt <password> [--quiet|-q]"
   echo "  ${bin} encrypted [--quiet|-q]"
-  echo "  ${bin} init <path> [url] [--quiet|-q]"
   echo "  ${bin} list-servers [role] [--quiet|-q]"
-  echo
-  echo 'Configuration Commands:'
-  echo '  init    Initialize to work against the given blueprint'
   echo
   echo 'Cryptography Commands:'
   echo '  decrypt      Decrypt blueprint'
@@ -225,24 +183,6 @@ function help() {
   echo '  docs     http://dev.cloud-elements.com'
   echo '  forum    http://forum.cloud-elements.com'
   echo '  repo     https://github.com/cloud-elements/hykes-blueprint'
-}
-
-function init() {
-  pprint head 'Initializing' ${quiet}
-  test -n "${url}" && \
-    pprint subhead 'Cleaning' ${quiet} &&
-    { clean-blueprint || \
-      { pprint bad 'failed' ${quiet} ; return 1; }; } && \
-    pprint subhead 'Cloning' ${quiet} && \
-    { clone-blueprint "${url}" || \
-      { pprint bad 'failed' ${quiet} ; return 1; }; }
-
-  pprint subhead 'Configuring' ${quiet}
-  local gp ; gp=$(greadlink -f "${path}")
-  case "$?" in
-    0) write-config-path "${gp}" ;;
-    *) pprint bad 'failed (path should exist)' ${quiet} ; return 1 ;;
-  esac
 }
 
 function list-servers() {
@@ -272,6 +212,6 @@ trap "delete-tmp-password" 0
 case "${cmd}" in
   --help|-h) help ; exit 0 ;;
   --version|-v) version ; exit 0 ;;
-  decrypt|decrypted|encrypt|encrypted|init|list-servers) "${cmd}" ; exit "$?" ;;
+  decrypt|decrypted|encrypt|encrypted|list-servers) "${cmd}" ; exit "$?" ;;
   *) help ; exit 1 ;;
 esac
