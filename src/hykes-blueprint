@@ -58,7 +58,7 @@ while (( "$#" )); do
         decrypt|encrypt) test -n "${1}" && test -z "${password}" && password=${1} ;;
       esac
       case "${cmd}" in
-        list-servers) test -n "${1}" && test -z "${role}" && role=${1} ;;
+        ls) test -n "${1}" && test -z "${role}" && role=${1} ;;
       esac
       shift
     ;;
@@ -168,7 +168,7 @@ function help() {
   echo "  ${bin} decrypted [--quiet|-q]"
   echo "  ${bin} encrypt <password> [--quiet|-q]"
   echo "  ${bin} encrypted [--quiet|-q]"
-  echo "  ${bin} list-servers [role] [--quiet|-q]"
+  echo "  ${bin} ls [role] [--quiet|-q]"
   echo
   echo 'Cryptography Commands:'
   echo '  decrypt      Decrypt blueprint'
@@ -177,7 +177,7 @@ function help() {
   echo '  encrypted    Output boolean indicating if encrypted'
   echo
   echo 'Discovery Commands:'
-  echo '  list-servers    Output unfurled servers from blueprint inventory'
+  echo '  ls    Output unfurled servers from blueprint inventory'
   echo
   echo 'More Information:'
   echo '  docs     http://dev.cloud-elements.com'
@@ -185,7 +185,7 @@ function help() {
   echo '  repo     https://github.com/cloud-elements/hykes-blueprint'
 }
 
-function list-servers() {
+function ls() {
   pprint head 'Listing' ${quiet}
   state-crypto
   case "$?" in
@@ -212,6 +212,6 @@ trap "delete-tmp-password" 0
 case "${cmd}" in
   --help|-h) help ; exit 0 ;;
   --version|-v) version ; exit 0 ;;
-  decrypt|decrypted|encrypt|encrypted|list-servers) "${cmd}" ; exit "$?" ;;
+  decrypt|decrypted|encrypt|encrypted|ls) "${cmd}" ; exit "$?" ;;
   *) help ; exit 1 ;;
 esac

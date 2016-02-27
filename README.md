@@ -45,7 +45,7 @@ Usage:
   hykes-blueprint decrypted [--quiet|-q]
   hykes-blueprint encrypt <password> [--quiet|-q]
   hykes-blueprint encrypted [--quiet|-q]
-  hykes-blueprint list-servers [role] [--quiet|-q]
+  hykes-blueprint ls [role] [--quiet|-q]
 
 Cryptography Commands:
   decrypt      Decrypt blueprint
@@ -54,7 +54,7 @@ Cryptography Commands:
   encrypted    Output boolean indicating if encrypted
 
 Discovery Commands:
-  list-servers    Output unfurled servers from blueprint inventory
+  ls    Output unfurled servers from blueprint inventory
 
 More Information:
   docs     http://dev.cloud-elements.com
