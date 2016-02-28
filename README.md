@@ -65,8 +65,8 @@ More Information:
 > __PROTIPS:__
 * All commands prompt for required arguments which were not provided via options or arguments. This
 allows for both traditional usage and also prompt-based usage.
-* All arguments can be provided as options (e.g. `[--password|-p <password>]`, `[--path|-P <path>]`,
-`[--role|-r <role>]`).
+* All arguments can be provided as options (e.g. `[--password|-p <password>]`, `[--role|-r <role>]
+).
 
 ## Examples and Recipes
 
