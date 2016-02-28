@@ -1,22 +1,20 @@
 #!/usr/bin/env bats
 
 function clone-repo() {
-  git clone git@github.com:cloud-elements/hykes-spec.git build/tmp/example.com
+  git clone "${HYKES_BLUEPRINT_PUBLIC_URL}" "${HYKES_BLUEPRINT_PUBLIC_PATH}"
 }
 
 function exists-repo() {
-  test -d build/tmp/example.com
+  test -d "${HYKES_BLUEPRINT_PUBLIC_PATH}"
 }
 
 function setup() {
-  if [ -z "${HYKES_BLUEPRINT_PUBLIC_PATH}" ] || \
-    [ -z "${HYKES_BLUEPRINT_PUBLIC_URL}" ]; then
-
+  if [ -z "${HYKES_BLUEPRINT_PUBLIC_PATH}" ] || [ -z "${HYKES_BLUEPRINT_PUBLIC_URL}" ]; then
     skip 'Environment variables should exist'
   fi
 
   if ! exists-repo; then clone-repo; fi
-  cd build/tmp/example.com
+  cd "${HYKES_BLUEPRINT_PUBLIC_PATH}"
 }
 
 @test 'encrypt should encrypt a decrypted blueprint' {

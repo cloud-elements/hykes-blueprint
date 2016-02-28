@@ -1,11 +1,11 @@
 #!/usr/bin/env bats
 
 function clone-repo() {
-  git clone git@github.com:cloud-elements/dev.ops.cloud-elements.com.git build/tmp/dev.ops.cloud-elements.com
+  git clone "${HYKES_BLUEPRINT_PRIVATE_URL}" "${HYKES_BLUEPRINT_PRIVATE_PATH}"
 }
 
 function exists-repo() {
-  test -d build/tmp/dev.ops.cloud-elements.com
+  test -d "${HYKES_BLUEPRINT_PRIVATE_PATH}"
 }
 
 function setup() {
@@ -17,7 +17,7 @@ function setup() {
   fi
 
   if ! exists-repo; then clone-repo; fi
-  cd build/tmp/dev.ops.cloud-elements.com
+  cd "${HYKES_BLUEPRINT_PRIVATE_PATH}"
 }
 
 @test 'decrypt should decrypt an encrypted blueprint' {
