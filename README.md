@@ -52,7 +52,7 @@ Cryptography Commands:
   encrypt      Encrypt blueprint
   encrypted    Output boolean indicating if encrypted
 
-Discovery Commands:
+Query Commands:
   ls    Output unfurled servers from blueprint inventory
 
 More Information:
