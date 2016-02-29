@@ -176,7 +176,7 @@ function help() {
   echo '  encrypt      Encrypt blueprint'
   echo '  encrypted    Output boolean indicating if encrypted'
   echo
-  echo 'Discovery Commands:'
+  echo 'Query Commands:'
   echo '  ls    Output unfurled servers from blueprint inventory'
   echo
   echo 'More Information:'
