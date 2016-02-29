@@ -8,13 +8,14 @@ function exists-repo() {
   test -d "${HYKES_BLUEPRINT_PUBLIC_PATH}"
 }
 
-function setup() {
+function should-have-env() {
   if [ -z "${HYKES_BLUEPRINT_PUBLIC_PATH}" ] || [ -z "${HYKES_BLUEPRINT_PUBLIC_URL}" ]; then
     skip 'Environment variables should exist'
   fi
+}
 
-  if ! exists-repo; then clone-repo; fi
-  cd "${HYKES_BLUEPRINT_PUBLIC_PATH}"
+function setup() {
+  should-have-env && if ! exists-repo; then clone-repo; fi && cd "${HYKES_BLUEPRINT_PUBLIC_PATH}"
 }
 
 @test 'encrypt should encrypt a decrypted blueprint' {
