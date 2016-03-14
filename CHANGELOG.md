@@ -1,3 +1,8 @@
+## v0.1.1 <sub><sup>(2016-03-14)</sup></sub>
+
+#### Highlights
+* Minor bugfixes and enhancements
+
 ## v0.1.0 <sub><sup>(2016-02-27)</sup></sub>
 
 #### Highlights
