@@ -50,9 +50,6 @@ while (( "$#" )); do
     --password=*) password=${1/--password=/''}; shift ;;
     --quiet) quiet='-q'; shift ;;
     --role=*) role=${1/--role=/''}; shift ;;
-    -p*) password=${2}; shift; shift ;;
-    -q) quiet='-q'; shift ;;
-    -r*) role=${2}; shift; shift ;;
     *)
       case "${cmd}" in
         decrypt|encrypt) test -n "${1}" && test -z "${password}" && password=${1} ;;
@@ -164,11 +161,11 @@ function help() {
   local bin=${a[${#a[@]}-1]}
 
   echo 'Usage:'
-  echo "  ${bin} decrypt <password> [--quiet|-q]"
-  echo "  ${bin} decrypted [--quiet|-q]"
-  echo "  ${bin} encrypt <password> [--quiet|-q]"
-  echo "  ${bin} encrypted [--quiet|-q]"
-  echo "  ${bin} ls [role] [--quiet|-q]"
+  echo "  ${bin} decrypt <password> [--quiet]"
+  echo "  ${bin} decrypted [--quiet]"
+  echo "  ${bin} encrypt <password> [--quiet]"
+  echo "  ${bin} encrypted [--quiet]"
+  echo "  ${bin} ls [role] [--quiet]"
   echo
   echo 'Cryptography Commands:'
   echo '  decrypt      Decrypt blueprint'

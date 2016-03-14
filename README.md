@@ -40,11 +40,11 @@ on Ubuntu.
 ```bash
 $ hykes-blueprint --help
 Usage:
-  hykes-blueprint decrypt <password> [--quiet|-q]
-  hykes-blueprint decrypted [--quiet|-q]
-  hykes-blueprint encrypt <password> [--quiet|-q]
-  hykes-blueprint encrypted [--quiet|-q]
-  hykes-blueprint ls [role] [--quiet|-q]
+  hykes-blueprint decrypt <password> [--quiet]
+  hykes-blueprint decrypted [--quiet]
+  hykes-blueprint encrypt <password> [--quiet]
+  hykes-blueprint encrypted [--quiet]
+  hykes-blueprint ls [role] [--quiet]
 
 Cryptography Commands:
   decrypt      Decrypt blueprint
@@ -64,8 +64,7 @@ More Information:
 > __PROTIPS:__
 * All commands prompt for required arguments which were not provided via options or arguments. This
 allows for both traditional usage and also prompt-based usage.
-* All arguments can be provided as options (e.g. `[--password|-p <password>]`, `[--role|-r <role>]`
-).
+* All arguments can be provided as options (e.g. `[--password=<password>]`, `[--role=<role>]`).
 
 ## Examples and Recipes
 
