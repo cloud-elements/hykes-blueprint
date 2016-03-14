@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-cmd="${1}" ; shift
+cmd="${1}"; shift
 
 ## Global utility functions #######################################################################
 function delete-tmp-password() {
@@ -17,8 +17,8 @@ function pprint() {
 
   while (( "$#" )); do
     case "${1}" in
-      -n) local n='-n' ; shift ;;
-      -q) local q='-q' ; shift ;;
+      -n) local n='-n'; shift ;;
+      -q) local q='-q'; shift ;;
       *)
         test -n "${1}" && test -n "${adj}" && local msg=${1}
         test -n "${1}" && test -z "${adj}" && local adj=${1}
@@ -47,12 +47,12 @@ export -f write-tmp-password
 ## Argument and option parsing ####################################################################
 while (( "$#" )); do
   case "${1}" in
-    --password=*) password=${1/--password=/''} ; shift ;;
-    --quiet) quiet='-q' ; shift ;;
-    --role=*) role=${1/--role=/''} ; shift ;;
-    -p*) password=${2} ; shift ; shift ;;
-    -q) quiet='-q' ; shift ;;
-    -r*) role=${2} ; shift ; shift ;;
+    --password=*) password=${1/--password=/''}; shift ;;
+    --quiet) quiet='-q'; shift ;;
+    --role=*) role=${1/--role=/''}; shift ;;
+    -p*) password=${2}; shift; shift ;;
+    -q) quiet='-q'; shift ;;
+    -r*) role=${2}; shift; shift ;;
     *)
       case "${cmd}" in
         decrypt|encrypt) test -n "${1}" && test -z "${password}" && password=${1} ;;
@@ -67,7 +67,7 @@ done
 
 ## Argument and option prompting ##################################################################
 case "${cmd}" in
-  decrypt|encrypt) test -z "${password}" && read -e -p 'Enter password: ' -s password ; echo ;;
+  decrypt|encrypt) test -z "${password}" && { read -e -p 'Enter password: ' -s password; echo; } ;;
 esac
 
 ## Command utility functions ######################################################################
@@ -128,16 +128,16 @@ export -f unfurl-inventory-role
 function decrypt() {
   pprint head 'Decrypting' ${quiet}
   { state-crypto || \
-    { pprint bad 'failed (blueprint should be encrypted)' ${quiet} ; return 1; }; } && \
+    { pprint bad 'failed (blueprint should be encrypted)' ${quiet}; return 1; }; } && \
   { write-tmp-password "${password}" && decrypt-blueprint || \
-    { pprint bad 'failed' ${quiet} ; return 1; }; }
+    { pprint bad 'failed' ${quiet}; return 1; }; }
 }
 
 function decrypted() {
   pprint head 'Decrypted' ${quiet}
   state-crypto
   case "$?" in
-    0) echo 'false' ; return 1 ;;
+    0) echo 'false'; return 1 ;;
     *) echo 'true' ;;
   esac
 }
@@ -145,7 +145,7 @@ function decrypted() {
 function encrypt() {
   pprint head 'Encrypting' ${quiet}
   { ! state-crypto || \
-    { pprint bad 'failed (blueprint should be decrypted)' ${quiet} ; return 1; }; } && \
+    { pprint bad 'failed (blueprint should be decrypted)' ${quiet}; return 1; }; } && \
   { write-tmp-password "${password}" && encrypt-blueprint || \
     { pprint bad 'failed' ${quiet} ; return 1; }; }
 }
@@ -155,7 +155,7 @@ function encrypted() {
   state-crypto
   case "$?" in
     0) echo 'true' ;;
-    *) echo 'false' ; return 1 ;;
+    *) echo 'false'; return 1 ;;
   esac
 }
 
@@ -189,7 +189,7 @@ function ls() {
   pprint head 'Listing' ${quiet}
   state-crypto
   case "$?" in
-    0) pprint bad 'failed (blueprint should be decrypted)' ${quiet} ; return 1 ;;
+    0) pprint bad 'failed (blueprint should be decrypted)' ${quiet}; return 1 ;;
     *)
       local inv="$(read-inventory)"
       local unfurl="$(echo "${inv}" | xargs -I{} bash -c '! unfurl-inventory-role {}')"
@@ -210,8 +210,8 @@ trap "delete-tmp-password" 0
 
 ## Command routing ################################################################################
 case "${cmd}" in
-  --help|-h) help ; exit 0 ;;
-  --version|-v) version ; exit 0 ;;
-  decrypt|decrypted|encrypt|encrypted|ls) "${cmd}" ; exit "$?" ;;
-  *) help ; exit 1 ;;
+  --help|-h) help; exit 0 ;;
+  --version|-v) version; exit 0 ;;
+  decrypt|decrypted|encrypt|encrypted|ls) "${cmd}"; exit "$?" ;;
+  *) help; exit 1 ;;
 esac
