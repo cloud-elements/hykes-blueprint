@@ -67,7 +67,7 @@ done
 
 ## Argument and option prompting ##################################################################
 case "${cmd}" in
-  decrypt|encrypt) test -z "${password}" && read -e -p 'Enter password: ' -s password ; echo ;;
+  decrypt|encrypt) test -z "${password}" && { read -e -p 'Enter password: ' -s password; echo; } ;;
 esac
 
 ## Command utility functions ######################################################################
