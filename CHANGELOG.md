@@ -1,3 +1,8 @@
+## v0.2.0 <sub><sup>(2016-03-14)</sup></sub>
+
+#### Highlights
+* Removed shorthand options
+
 ## v0.1.1 <sub><sup>(2016-03-14)</sup></sub>
 
 #### Highlights
