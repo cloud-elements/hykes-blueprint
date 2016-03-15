@@ -1,4 +1,4 @@
-# hykes-blueprint <sub><sup>| Cloud Elements cloud blueprint utility</sup></sub>
+# hykes-blueprint <sub><sup>| Cloud Elements Enterprise blueprint utility</sup></sub>
 [![version](http://img.shields.io/badge/version-v0.2.0-blue.svg)](CHANGELOG.md)
 [![versioning](http://img.shields.io/badge/versioning-semver-blue.svg)](http://semver.org)
 [![branching](http://img.shields.io/badge/branching-github%20flow-blue.svg)](https://guides.github.com/introduction/flow/)
