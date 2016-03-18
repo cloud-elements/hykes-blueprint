@@ -66,50 +66,6 @@ More Information:
 allows for both traditional usage and also prompt-based usage.
 * All arguments can be provided as options (e.g. `[--password=<password>]`, `[--role=<role>]`).
 
-## Examples and Recipes
-
-### Work against private blueprint repo, which is remotely hosted on GitHub:
-
-The local blueprint repo will have the contents of the private GitHub blueprint repo cloned into it.
-It is assumed, in this example, that both blueprint repos are encrypted.
-
-```bash
-# Change directory to local blueprint:
-$ cd /path/to/blueprint
-
-# Decrypt local blueprint:
-$ hykes-blueprint decrypt
-
-# Modify local blueprint:
-...
-
-# Encrypt local blueprint:
-$ hykes-blueprint encrypt
-
-# Commit and push local blueprint to GitHub:
-$ git add -A
-$ git commit -m 'Message'
-$ git push origin master
-```
-
-### Work against public blueprint repo, which is remotely hosted on GitHub:
-
-The local blueprint repo will have the contents of the public GitHub blueprint repo cloned into it.
-It is assumed, in this example, that both blueprint repos are decrypted.
-
-```bash
-# Change directory to local blueprint:
-$ cd /path/to/blueprint
-
-# Modify local blueprint:
-...
-
-# Commit and push local blueprint to GitHub:
-$ git add -A
-$ git commit -m 'Message'
-$ git push origin master
-```
-
 ## Changelog
 
 See [CHANGELOG.md](CHANGELOG.md)
