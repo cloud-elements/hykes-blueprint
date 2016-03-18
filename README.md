@@ -1,6 +1,6 @@
 # hykes-blueprint <sub><sup>| Cloud Elements Enterprise blueprint utility</sup></sub>
 [![version](http://img.shields.io/badge/version-0.2.0-blue.svg)](CHANGELOG.md)
-[![versioning](http://img.shields.io/badge/versioning-semver-blue.svg)](http://semver.org)
+[![versioning](http://img.shields.io/badge/versioning-semver-blue.svg)](CONTRIBUTING.md)
 [![branching](http://img.shields.io/badge/branching-github%20flow-blue.svg)](CONTRIBUTING.md)
 [![spec](http://img.shields.io/badge/spec-%3E%3D%200.0.0-blue.svg)](https://github.com/cloud-elements/hykes-spec)
 [![pm](http://img.shields.io/badge/pm-zenhub-blue.svg)](https://www.zenhub.io)
