@@ -9,6 +9,10 @@ While this project works off a continuous release approach,
 [Semantic Versioning](http://semver.org/) is used as a decorator to break up new features, bug
 fixes, and documentation into digestible chunks for third-parties.
 
+## Project Management
+
+This project uses GitHub enhanced with [ZenHub](https://www.zenhub.io/) for project management.
+
 ## Contributor Norms
 
 ### Test Coverage
