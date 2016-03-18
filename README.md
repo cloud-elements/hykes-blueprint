@@ -1,9 +1,9 @@
 # hykes-blueprint <sub><sup>| Cloud Elements Enterprise blueprint utility</sup></sub>
-[![version](http://img.shields.io/badge/version-v0.2.0-blue.svg)](CHANGELOG.md)
-[![versioning](http://img.shields.io/badge/versioning-semver-blue.svg)](http://semver.org)
-[![branching](http://img.shields.io/badge/branching-github%20flow-blue.svg)](https://guides.github.com/introduction/flow/)
-[![license](http://img.shields.io/badge/license-apache-blue.svg)](LICENSE.md)
-[![pm](http://img.shields.io/badge/pm-zenhub-blue.svg)](https://www.zenhub.io)
+[![version](http://img.shields.io/badge/version-0.2.0-blue.svg)](CHANGELOG.md)
+[![spec](http://img.shields.io/badge/spec-%3E%3D%200.0.0-blue.svg)](https://github.com/cloud-elements/hykes-spec)
+[![versioning](http://img.shields.io/badge/versioning-semver-blue.svg)](CONTRIBUTING.md)
+[![branching](http://img.shields.io/badge/branching-github%20flow-blue.svg)](CONTRIBUTING.md)
+[![pm](http://img.shields.io/badge/pm-zenhub-blue.svg)](CONTRIBUTING.md)
 [![docs](http://img.shields.io/badge/docs-read-blue.svg)](https://developers.cloud-elements.com)
 [![forum](http://img.shields.io/badge/forum-join-blue.svg)](https://forum.cloud-elements.com)
 [![circleci](https://circleci.com/gh/cloud-elements/hykes-blueprint.svg?style=shield)](https://circleci.com/gh/cloud-elements/hykes-blueprint)
@@ -65,50 +65,6 @@ More Information:
 * All commands prompt for required arguments which were not provided via options or arguments. This
 allows for both traditional usage and also prompt-based usage.
 * All arguments can be provided as options (e.g. `[--password=<password>]`, `[--role=<role>]`).
-
-## Examples and Recipes
-
-### Work against private blueprint repo, which is remotely hosted on GitHub:
-
-The local blueprint repo will have the contents of the private GitHub blueprint repo cloned into it.
-It is assumed, in this example, that both blueprint repos are encrypted.
-
-```bash
-# Change directory to local blueprint:
-$ cd /path/to/blueprint
-
-# Decrypt local blueprint:
-$ hykes-blueprint decrypt
-
-# Modify local blueprint:
-...
-
-# Encrypt local blueprint:
-$ hykes-blueprint encrypt
-
-# Commit and push local blueprint to GitHub:
-$ git add -A
-$ git commit -m 'Message'
-$ git push origin master
-```
-
-### Work against public blueprint repo, which is remotely hosted on GitHub:
-
-The local blueprint repo will have the contents of the public GitHub blueprint repo cloned into it.
-It is assumed, in this example, that both blueprint repos are decrypted.
-
-```bash
-# Change directory to local blueprint:
-$ cd /path/to/blueprint
-
-# Modify local blueprint:
-...
-
-# Commit and push local blueprint to GitHub:
-$ git add -A
-$ git commit -m 'Message'
-$ git push origin master
-```
 
 ## Changelog
 
