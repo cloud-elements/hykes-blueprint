@@ -17,10 +17,6 @@ $ brew tap cloud-elements/hykes
 $ brew install hykes-blueprint
 ```
 
-### Via PPA:
-
-In development
-
 ### Via compiling from source:
 
 ```bash
